@@ -1,6 +1,7 @@
 import { createTheme, DirectionProvider, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Navigate, Route, Routes } from "react-router";
+import AboutPage from "./pages/about-page.tsx";
 import HomePage from "./pages/home-page.tsx";
 import NotFoundPage from "./pages/not-found-page.tsx";
 import { URLS } from "./utils/urls.ts";
@@ -39,6 +40,7 @@ export default function App() {
       <MantineProvider theme={theme} defaultColorScheme="auto">
         <Routes>
           <Route path={URLS.home} element={<HomePage />} />
+          <Route path={URLS.about} element={<AboutPage />} />
           <Route path={URLS.notFound} element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to={URLS.notFound} />} />
         </Routes>

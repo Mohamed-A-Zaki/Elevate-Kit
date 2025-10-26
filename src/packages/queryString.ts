@@ -160,3 +160,63 @@ export function getQueryString(options?: ParseOptions): QueryObject {
   const search = window.location.search || "";
   return parse(search, options);
 }
+
+/**
+ * Set or update the current URL’s query string (without reloading the page)
+ * Works only in browser environments.
+ */
+export function setQueryString(
+  query: QueryObject,
+  options?: StringifyOptions,
+): void {
+  if (typeof window === "undefined" || typeof window.history === "undefined") {
+    throw new Error(
+      "setQueryString() can only be used in a browser environment.",
+    );
+  }
+
+  const currentUrl = window.location.origin + window.location.pathname;
+  const queryString = stringify(query, options);
+  const newUrl = queryString ? `${currentUrl}?${queryString}` : currentUrl;
+
+  // Update the browser URL without page reload
+  window.history.replaceState(null, "", newUrl);
+}
+
+export function updateQueryString(
+  updates: QueryObject,
+  options?: StringifyOptions,
+): void {
+  const current = getQueryString(); // your existing function
+  const merged = { ...current, ...updates };
+  setQueryString(merged, options);
+}
+
+/**
+ * Remove the entire query string from the current URL (without reloading the page)
+ * Works only in browser environments.
+ */
+export function removeQueryString(): void {
+  if (typeof window === "undefined" || typeof window.history === "undefined") {
+    throw new Error(
+      "removeQueryString() can only be used in a browser environment.",
+    );
+  }
+
+  const newUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState(null, "", newUrl);
+}
+
+/**
+ * Remove specific query keys (e.g. ?page=2&search=test → ?search=test)
+ */
+export function removeQueryKeys(
+  keys: string[],
+  options?: StringifyOptions,
+): void {
+  const current = getQueryString();
+  for (const key of keys) {
+    delete current[key];
+  }
+  setQueryString(current, options);
+}

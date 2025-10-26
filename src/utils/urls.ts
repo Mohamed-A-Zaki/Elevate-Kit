@@ -7,5 +7,6 @@ export const URLS = {
     verifyEmail: "/verify-email",
   },
   home: "/",
+  about: "/about",
   notFound: "/404",
 };

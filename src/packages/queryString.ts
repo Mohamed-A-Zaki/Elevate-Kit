@@ -21,15 +21,12 @@ export type QueryValue =
   | null
   | undefined
   | (string | number | boolean)[];
+
 export type QueryObject = Record<string, QueryValue>;
 
-/**
- * Parse a query string (e.g. ?a=1&b=2) into an object
- */
-export function parse(query: string, options: ParseOptions = {}): QueryObject {
+function parse(query: string, options: ParseOptions = {}): QueryObject {
   const { decode = true, arrayFormat = "none" } = options;
   const queryString = query.startsWith("?") ? query.slice(1) : query;
-
   if (!queryString.trim()) return {};
 
   const params = new URLSearchParams(queryString);
@@ -70,13 +67,7 @@ export function parse(query: string, options: ParseOptions = {}): QueryObject {
   return result;
 }
 
-/**
- * Convert an object into a query string
- */
-export function stringify(
-  obj: QueryObject,
-  options: StringifyOptions = {},
-): string {
+function stringify(obj: QueryObject, options: StringifyOptions = {}): string {
   const {
     encode = true,
     arrayFormat = "none",
@@ -123,10 +114,7 @@ export function stringify(
   return parts.join("&");
 }
 
-/**
- * Parse a full URL and return { url, query }
- */
-export function parseUrl(
+function parseUrl(
   url: string,
   options?: ParseOptions,
 ): { url: string; query: QueryObject } {
@@ -134,10 +122,7 @@ export function parseUrl(
   return { url: base, query: parse(query || "", options) };
 }
 
-/**
- * Stringify URL + query object
- */
-export function stringifyUrl(
+function stringifyUrl(
   input: { url: string; query?: QueryObject },
   options?: StringifyOptions,
 ): string {
@@ -146,77 +131,60 @@ export function stringifyUrl(
   return queryString ? `${url}?${queryString}` : url;
 }
 
-/**
- * ✅ Get the current URL’s query string parsed automatically
- * Works only in browser environments.
- */
-export function getQueryString(options?: ParseOptions): QueryObject {
+function get(options?: ParseOptions): QueryObject {
   if (typeof window === "undefined" || typeof window.location === "undefined") {
     throw new Error(
-      "getQueryString() can only be used in a browser environment.",
+      "queryString.get() can only be used in a browser environment.",
     );
   }
-
-  const search = window.location.search || "";
-  return parse(search, options);
+  return parse(window.location.search || "", options);
 }
 
-/**
- * Set or update the current URL’s query string (without reloading the page)
- * Works only in browser environments.
- */
-export function setQueryString(
-  query: QueryObject,
-  options?: StringifyOptions,
-): void {
+function set(query: QueryObject, options?: StringifyOptions): void {
   if (typeof window === "undefined" || typeof window.history === "undefined") {
     throw new Error(
-      "setQueryString() can only be used in a browser environment.",
+      "queryString.set() can only be used in a browser environment.",
     );
   }
-
   const currentUrl = window.location.origin + window.location.pathname;
   const queryString = stringify(query, options);
   const newUrl = queryString ? `${currentUrl}?${queryString}` : currentUrl;
-
-  // Update the browser URL without page reload
   window.history.replaceState(null, "", newUrl);
 }
 
-export function updateQueryString(
-  updates: QueryObject,
-  options?: StringifyOptions,
-): void {
-  const current = getQueryString(); // your existing function
+function update(updates: QueryObject, options?: StringifyOptions): void {
+  const current = get();
   const merged = { ...current, ...updates };
-  setQueryString(merged, options);
+  set(merged, options);
 }
 
-/**
- * Remove the entire query string from the current URL (without reloading the page)
- * Works only in browser environments.
- */
-export function removeQueryString(): void {
+function remove(): void {
   if (typeof window === "undefined" || typeof window.history === "undefined") {
     throw new Error(
-      "removeQueryString() can only be used in a browser environment.",
+      "queryString.remove() can only be used in a browser environment.",
     );
   }
-
   const newUrl = window.location.origin + window.location.pathname;
   window.history.replaceState(null, "", newUrl);
 }
 
-/**
- * Remove specific query keys (e.g. ?page=2&search=test → ?search=test)
- */
-export function removeQueryKeys(
-  keys: string[],
-  options?: StringifyOptions,
-): void {
-  const current = getQueryString();
-  for (const key of keys) {
-    delete current[key];
-  }
-  setQueryString(current, options);
+function removeKeys(keys: string[], options?: StringifyOptions): void {
+  const current = get();
+  for (const key of keys) delete current[key];
+  set(current, options);
 }
+
+/**
+ * ✅ Exported unified object API
+ */
+export const queryString = {
+  parse,
+  stringify,
+  parseUrl,
+  stringifyUrl,
+  get,
+  set,
+  update,
+  remove,
+  removeKeys,
+};

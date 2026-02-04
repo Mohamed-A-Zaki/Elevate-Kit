@@ -1,30 +1,36 @@
-import Endpoint from "@mongez/http";
-import { type AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
+import { cache } from "smart-cache-ts";
 import { authAtom } from "../atoms/app/auth-atom.ts";
-import { cache } from "../packages/cache.ts";
-import type { LocaleCode } from "../types/localization.ts";
-import { baseUrl, defaultLocaleCode } from "./flags.ts";
+import { baseUrl, defaultLocaleCode, localeCodeCacheKey } from "./flags.ts";
 
-export const endpoint = new Endpoint({
+export const endpoint = axios.create({
   baseURL: baseUrl,
+  // withCredentials: true,
+  // headers: {
+  //   "Accept-Language": cache.get(localeCodeCacheKey) || defaultLocaleCode,
+  // },
+});
 
-  setAuthorizationHeader: () => {
-    const token = cache.get("token");
+endpoint.interceptors.request.use(
+  (config) => {
+    // Accept-Language Header
+    config.headers["Accept-Language"] =
+      cache.get(localeCodeCacheKey) || defaultLocaleCode;
 
-    if (token) {
-      return `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+endpoint.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const response: AxiosResponse | undefined = error.response;
+
+    if (response?.data?.status_code === 401) {
+      authAtom.change("user", null);
     }
-  },
 
-  headers: {
-    "Accept-Language":
-      (cache.get("locale-code") as LocaleCode) || defaultLocaleCode,
+    return Promise.reject(error);
   },
-});
-
-endpoint.events.onError((response: AxiosResponse) => {
-  if (response.data.status_code === 401) {
-    authAtom.change("user", null);
-    authAtom.change("token", "");
-  }
-});
+);

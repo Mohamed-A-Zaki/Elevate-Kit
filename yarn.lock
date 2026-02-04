@@ -557,41 +557,10 @@
     "@mongez/events" "^2.1.0"
     "@mongez/reinforcements" "^2.3.10"
 
-"@mongez/cache@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@mongez/cache/-/cache-1.2.4.tgz#b4201c94214d8cc8b561d7d3e73a620824fa9517"
-  integrity sha512-1m5lmoj7mODtUrxfLXtS8bQskCNtJp+fuvAkscP64nalCGBK7BMnNkSvWGy8BGIg+vAv1qKNpe/GJ7SEECutEQ==
-  dependencies:
-    "@mongez/encryption" "^1.0.x"
-
-"@mongez/concat-route@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mongez/concat-route/-/concat-route-1.0.0.tgz#c2c0d26274c6135914be5f64670a2986aa443ce2"
-  integrity sha512-yl0kNPilESIk3GcdZtgChfpfVc8VzqQmHTZ+H12wuxACWl7hbA9jK8xQrjvdh+IIxd4Wzr4eaDfrpRpPTvwSQw==
-
-"@mongez/encryption@^1.0.x":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@mongez/encryption/-/encryption-1.0.4.tgz#91b9c78ddadf29ce5be35fa8a52f9eecbf371008"
-  integrity sha512-g97rfpCUQEYVSPo0Y8WETHhmoK+6/vZ+1antlym2UQbBvIjXquaAlPB8bqnC+ry7JsCmUIpGatIp6m4S2Xa8Lg==
-  dependencies:
-    crypto-js "^4.0.0"
-
 "@mongez/events@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@mongez/events/-/events-2.1.0.tgz#644fa0c0ae226f162ccca4a755a059892d545253"
   integrity sha512-gUTDm8fy0BRJmG/kkSmLi/Ir2PAFQQtk0FE9GGivnIK5YpGJD6MFrIj3Ui8SN3mMFKvCJae6zJjuYv6fLFQgBQ==
-
-"@mongez/http@^2.2.10":
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/@mongez/http/-/http-2.2.10.tgz#b0b97f93efaa9dc231c48675f9b8088d81a5aa16"
-  integrity sha512-b6brq0ip8HBJwI0qXr6M/cE6nW29W9BqvmXR6eInohxuOipJb68eJJ98Wrxuihk0AuIAVQUjZufkZUHl/6qQew==
-  dependencies:
-    "@mongez/cache" "^1.2.4"
-    "@mongez/concat-route" "^1.0.0"
-    "@mongez/events" "^2.1.0"
-    "@mongez/reinforcements" "^2.3.8"
-    "@mongez/supportive-is" "^2.0.0"
-    axios "^1.5.0"
 
 "@mongez/react-atom@^5.1.0":
   version "5.1.0"
@@ -600,15 +569,10 @@
   dependencies:
     "@mongez/atom" "^1.0.0"
 
-"@mongez/reinforcements@^2.3.10", "@mongez/reinforcements@^2.3.8":
+"@mongez/reinforcements@^2.3.10":
   version "2.3.10"
   resolved "https://registry.yarnpkg.com/@mongez/reinforcements/-/reinforcements-2.3.10.tgz#cf47b3196cf5283ea7d4228652df6ee2e2cb2296"
   integrity sha512-jGTDXo2AO+E0Xuy1iTmJHlz2W/dbxWBTuy/J1MRjKs140JNG3mDqM1Msv1a6aLCg7toHqiRusdI13JuMNqWtOw==
-
-"@mongez/supportive-is@^2.0.0":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@mongez/supportive-is/-/supportive-is-2.0.4.tgz#e0ac07d3e6e3afce054bc37b44c5001cae3b4ceb"
-  integrity sha512-Q6PWltQWL6XdbWXuqCogQZ8+fiRpkEhlFtaRmZ9sC/jj/nw/vffuCYYxe0nQuN0SNNVvT48S0JAlzNGMUp0nuw==
 
 "@napi-rs/wasm-runtime@^1.0.5":
   version "1.0.7"
@@ -1322,15 +1286,6 @@ axios@^1.13.4:
     form-data "^4.0.4"
     proxy-from-env "^1.1.0"
 
-axios@^1.5.0:
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.12.2.tgz#6c307390136cf7a2278d09cec63b136dfc6e6da7"
-  integrity sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==
-  dependencies:
-    follow-redirects "^1.15.6"
-    form-data "^4.0.4"
-    proxy-from-env "^1.1.0"
-
 babel-plugin-react-compiler@^19.1.0-rc.3:
   version "19.1.0-rc.1-rc-af1b7da-20250421"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.1.0-rc.1-rc-af1b7da-20250421.tgz#d52096e058c63293ced8b57d3f9b0395d1894ede"
@@ -1512,11 +1467,6 @@ cross-spawn@^7.0.6:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-crypto-js@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
-  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 cssesc@^3.0.0:
   version "3.0.0"

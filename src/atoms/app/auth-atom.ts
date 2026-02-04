@@ -1,6 +1,6 @@
 import { notifications } from "@mantine/notifications";
 import { atom } from "@mongez/react-atom";
-import { cache } from "../../packages/cache.ts";
+import { cache } from "smart-cache-ts";
 import type {
   LoginFormData,
   LoginResponse,

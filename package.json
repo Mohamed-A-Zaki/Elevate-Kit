@@ -36,6 +36,8 @@
     "react-phone-number-input": "^3.4.14",
     "react-router": "^7.13.0",
     "recharts": "^3.7.0",
+    "smart-cache-ts": "^1.0.1",
+    "smart-query-string": "^1.0.3",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

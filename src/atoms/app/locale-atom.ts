@@ -1,5 +1,5 @@
 import { atom } from "@mongez/react-atom";
-import { cache } from "../../packages/cache.ts";
+import { cache } from "smart-cache-ts";
 import type { LocaleCode } from "../../types/localization.ts";
 import { defaultLocaleCode } from "../../utils/flags.ts";
 
@@ -11,7 +11,7 @@ export const localeAtom = atom<LocaleAtom>({
   key: "locale-atom",
 
   default: {
-    locale_code: (cache.get("locale-code") as LocaleCode) || defaultLocaleCode,
+    locale_code: cache.get<LocaleCode>("locale-code") || defaultLocaleCode,
   },
 
   beforeUpdate(newValue) {

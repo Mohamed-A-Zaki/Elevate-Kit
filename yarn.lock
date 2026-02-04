@@ -3477,6 +3477,16 @@ slice-ansi@^7.1.0:
     ansi-styles "^6.2.1"
     is-fullwidth-code-point "^5.0.0"
 
+smart-cache-ts@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/smart-cache-ts/-/smart-cache-ts-1.0.1.tgz#364099a6a88600867592da437f3ff31cd6024a58"
+  integrity sha512-9eYd26nOWiYyo8sqmJrjf7YTNH67ufWjN84BU5K1M4ZUh8CNXz3BtcUF9s9sfd2WfA7Fz1CCLqTTRsKeqO/d1A==
+
+smart-query-string@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/smart-query-string/-/smart-query-string-1.0.3.tgz#767abc20a034f2055f0a538532c2c7d83b0dddce"
+  integrity sha512-Ce2tOl/wrK59LRd9utN4xjbUqPDCcpytKa9PoByojmBAaG1fxkq956A5HO6n3f15gYE8gDRQbClB+DnfLWZkmA==
+
 source-map-js@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"

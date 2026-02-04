@@ -1,8 +1,8 @@
 import {
   ActionIcon,
+  type MantineColorScheme,
   Select,
   useMantineColorScheme,
-  type MantineColorScheme,
 } from "@mantine/core";
 import { FaMoon, FaSun } from "react-icons/fa";
 

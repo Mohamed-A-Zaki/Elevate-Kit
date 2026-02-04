@@ -13,7 +13,7 @@ type User = {
 export default function HomePage() {
   return (
     <>
-      <div className={"flex items-center gap-4 m-3"}>
+      <div className={"flex items-center gap-4 p-3"}>
         <Button
           onClick={() => {
             console.log(queryString.get());

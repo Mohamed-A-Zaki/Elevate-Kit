@@ -6,32 +6,30 @@ import HomePage from "./pages/home-page.tsx";
 import NotFoundPage from "./pages/not-found-page.tsx";
 import { URLS } from "./utils/urls.ts";
 
-// const brandColors: MantineColorsTuple = [
-//   "#f7ecff",
-//   "#e7d6fb",
-//   "#caaaf1",
-//   "#ac7ce8",
-//   "#9354e0",
-//   "#833bdb",
-//   "#7b2eda",
-//   "#6921c2",
-//   "#5d1cae",
-//   "#501599",
-// ];
-
 const theme = createTheme({
-  // colors: {
-  //   brand: brandColors,
-  // },
-  // primaryColor: "brand",
-  // defaultRadius: "md",
-  // defaultGradient: {
-  //   from: "orange",
-  //   to: "red",
-  //   deg: 45,
-  // },
-  // fontFamily:
-  //   'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+  colors: {
+    brand: [
+      "var(--brand-50)",
+      "var(--brand-100)",
+      "var(--brand-200)",
+      "var(--brand-300)",
+      "var(--brand-400)",
+      "var(--brand-500)",
+      "var(--brand-600)",
+      "var(--brand-700)",
+      "var(--brand-800)",
+      "var(--brand-900)",
+    ],
+  },
+  primaryColor: "brand",
+  defaultRadius: "md",
+  defaultGradient: {
+    from: "orange",
+    to: "red",
+    deg: 45,
+  },
+  fontFamily:
+    'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
 });
 
 export default function App() {

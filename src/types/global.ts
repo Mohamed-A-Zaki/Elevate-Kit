@@ -1,5 +1,7 @@
 export type LocaleCode = "en" | "ar" | "fr";
 
+export type Theme = "dark" | "light" | "system";
+
 export type Translation = {
   [key: string]: string | Translation; // strings or nested objects
 };

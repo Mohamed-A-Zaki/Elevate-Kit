@@ -61,7 +61,7 @@ const MantinePhoneInput: React.FC<MantinePhoneInputProps> = ({
 
       <PhoneInput
         className="flex"
-        flagComponent={FlagComponent}
+        flagComponent={FlagComponent as any}
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         numberInputProps={{

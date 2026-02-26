@@ -3,14 +3,15 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "./App.tsx";
 
+import "./localization/i18n.ts";
+
 import "@mantine/carousel/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
-import "./index.css";
 
-import "./localization/i18n.ts";
+import "./styles/index.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

@@ -1,8 +1,4 @@
-import type {
-  Language,
-  LocaleCode,
-  Translation,
-} from "../types/localization.ts";
+import type { Language, LocaleCode, Translation } from "../types/global";
 import { arTranslations } from "./ar";
 import { enTranslations } from "./en";
 import { frTranslations } from "./fr";

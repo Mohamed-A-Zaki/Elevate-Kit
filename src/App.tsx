@@ -1,10 +1,13 @@
-import { createTheme, DirectionProvider, MantineProvider } from "@mantine/core";
+import {
+  createTheme,
+  DirectionProvider,
+  localStorageColorSchemeManager,
+  MantineProvider,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { Navigate, Route, Routes } from "react-router";
-import AboutPage from "./pages/about-page.tsx";
-import HomePage from "./pages/home-page.tsx";
-import NotFoundPage from "./pages/not-found-page.tsx";
-import { URLS } from "./utils/urls.ts";
+import i18n from "./localization/i18n.ts";
+import AppRoutes from "./routes/app-routes.tsx";
+import { CACHEKEYS, FONTS } from "./utils/flags.ts";
 
 const theme = createTheme({
   colors: {
@@ -28,21 +31,22 @@ const theme = createTheme({
     to: "red",
     deg: 45,
   },
-  fontFamily:
-    'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+  fontFamily: i18n.language === "ar" ? FONTS.AR : FONTS.EN,
+});
+
+const colorSchemeManager = localStorageColorSchemeManager({
+  key: CACHEKEYS.THEME,
 });
 
 export default function App() {
   return (
     <DirectionProvider>
-      <MantineProvider theme={theme} defaultColorScheme="auto">
-        <Routes>
-          <Route path={URLS.home} element={<HomePage />} />
-          <Route path={URLS.about} element={<AboutPage />} />
-          <Route path={URLS.notFound} element={<NotFoundPage />} />
-          <Route path="*" element={<Navigate to={URLS.notFound} />} />
-        </Routes>
-
+      <MantineProvider
+        theme={theme}
+        defaultColorScheme="auto"
+        colorSchemeManager={colorSchemeManager}
+      >
+        <AppRoutes />
         {/* Notifications */}
         <Notifications position="top-right" />
       </MantineProvider>

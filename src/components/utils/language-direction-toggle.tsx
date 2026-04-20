@@ -1,10 +1,10 @@
+import { localeAtom } from "@/atoms/locale-atom.ts";
+import { languages } from "@/localization/languages.ts";
+import type { LocaleCode } from "@/types/global.ts";
 import { ActionIcon, Menu, useDirection } from "@mantine/core";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaGlobe } from "react-icons/fa";
-import { localeAtom } from "../../atoms/locale-atom.ts";
-import { languages } from "../../localization/languages.ts";
-import type { LocaleCode } from "../../types/global.ts";
 
 export default function LanguageDirectionToggle() {
   const { i18n } = useTranslation();

@@ -1,3 +1,6 @@
+import i18n from "@/localization/i18n";
+import AppRoutes from "@/routes/app-routes";
+import { CACHEKEYS, FONTS } from "@/utils/flags";
 import {
   createTheme,
   DirectionProvider,
@@ -5,9 +8,6 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import i18n from "./localization/i18n.ts";
-import AppRoutes from "./routes/app-routes.tsx";
-import { CACHEKEYS, FONTS } from "./utils/flags.ts";
 
 const theme = createTheme({
   colors: {

@@ -1,6 +1,6 @@
+import Footer from "@/components/layout-componets/footer";
+import Navbar from "@/components/layout-componets/navbar";
 import { Outlet } from "react-router";
-import Footer from "../layout-componets/footer";
-import Navbar from "../layout-componets/navbar";
 
 export default function BaseLayout() {
   return (

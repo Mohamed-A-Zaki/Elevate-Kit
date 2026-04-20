@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-export default function AdminLayout() {
+export default function AuthLayout() {
   return (
     <>
       <Outlet />

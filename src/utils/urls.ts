@@ -1,10 +1,11 @@
 export const URLS = {
   auth: {
-    login: "/login",
-    register: "/register",
-    forgotPassword: "/forgot-password",
-    resetPassword: "/reset-password",
-    verifyEmail: "/verify-email",
+    base: "/auth",
+    login: "/auth/login",
+    register: "/auth/register",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
+    verifyEmail: "/auth/verify-email",
   },
   home: "/",
   about: "/about",

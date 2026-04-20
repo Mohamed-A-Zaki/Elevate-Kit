@@ -1,7 +1,7 @@
+import type { LocaleCode } from "@/types/global.ts";
+import { CACHEKEYS, DEFAULTLOCALECODE } from "@/utils/flags.ts";
 import { atom } from "@mongez/react-atom";
 import { cache } from "smart-cache-ts";
-import type { LocaleCode } from "../types/global.ts";
-import { CACHEKEYS, DEFAULTLOCALECODE } from "../utils/flags.ts";
 
 interface LocaleAtom {
   locale_code: LocaleCode;

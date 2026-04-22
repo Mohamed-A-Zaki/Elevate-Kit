@@ -1,4 +1,4 @@
-import { URLS } from "@/utils/urls";
+import { URLS } from "@/shared/utils/urls";
 import { Button } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";

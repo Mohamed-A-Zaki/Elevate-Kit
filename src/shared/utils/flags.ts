@@ -1,4 +1,4 @@
-import type { LocaleCode, Theme } from "@/types/global";
+import type { LocaleCode, Theme } from "@/shared/types/global";
 
 export const BASEURL = "https://app.vtechme.net/api";
 

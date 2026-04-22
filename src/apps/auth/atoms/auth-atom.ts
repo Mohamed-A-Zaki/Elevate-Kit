@@ -5,9 +5,9 @@ import type {
   RegisterFormData,
   RegisterResponse,
   User,
-} from "@/types/auth.ts";
-import { endpoint } from "@/utils/endpoints.ts";
-import { handleError } from "@/utils/handle-error.ts";
+} from "@/apps/auth/types/auth";
+import { endpoint } from "@/shared/utils/endpoints";
+import { handleError } from "@/shared/utils/handle-error";
 import { notifications } from "@mantine/notifications";
 import { atom } from "@mongez/react-atom";
 import { cache } from "smart-cache-ts";

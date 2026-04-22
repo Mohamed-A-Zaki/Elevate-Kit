@@ -1,6 +1,6 @@
-import { localeAtom } from "@/atoms/locale-atom.ts";
-import { languages } from "@/localization/languages.ts";
-import type { LocaleCode } from "@/types/global.ts";
+import { localeAtom } from "@/shared/atoms/locale-atom";
+import { languages } from "@/shared/localization/languages";
+import type { LocaleCode } from "@/shared/types/global";
 import { ActionIcon, Menu, useDirection } from "@mantine/core";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

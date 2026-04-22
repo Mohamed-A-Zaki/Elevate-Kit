@@ -1,4 +1,4 @@
-import i18n from "@/localization/i18n";
+import i18n from "@/shared/localization/i18n";
 
 /***
  * The `encode` function takes any JavaScript data, converts it to a JSON string, and then encodes that string into Base64 format. It uses `JSON.stringify` to convert the data to a JSON string, `encodeURIComponent` and `unescape` to handle any special characters in the JSON string, and `btoa` to encode the string into Base64.

@@ -51,6 +51,8 @@ const MantinePhoneInput: React.FC<MantinePhoneInputProps> = ({
   placeholder = "Enter phone number",
   ...props
 }) => {
+  const { ref, ...rest } = props as any;
+
   return (
     <Box className={className}>
       {label && (
@@ -77,7 +79,7 @@ const MantinePhoneInput: React.FC<MantinePhoneInputProps> = ({
         labels={labels}
         international={international}
         withCountryCallingCode={withCountryCallingCode}
-        {...props}
+        {...rest}
       />
 
       {error && typeof error === "string" && (

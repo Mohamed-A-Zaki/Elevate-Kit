@@ -1,6 +1,6 @@
-import i18n from "@/localization/i18n";
-import AppRoutes from "@/routes/app-routes";
-import { CACHEKEYS, FONTS } from "@/utils/flags";
+import i18n from "@/shared/localization/i18n";
+import AppRoutes from "@/shared/routes/app-routes";
+import { CACHEKEYS, FONTS } from "@/shared/utils/flags";
 import {
   createTheme,
   DirectionProvider,

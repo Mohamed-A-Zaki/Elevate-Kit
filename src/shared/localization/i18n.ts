@@ -1,5 +1,5 @@
-import type { LocaleCode } from "@/types/global.ts";
-import { CACHEKEYS, DEFAULTLOCALECODE } from "@/utils/flags.ts";
+import type { LocaleCode } from "@/shared/types/global";
+import { CACHEKEYS, DEFAULTLOCALECODE } from "@/shared/utils/flags";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { cache } from "smart-cache-ts";

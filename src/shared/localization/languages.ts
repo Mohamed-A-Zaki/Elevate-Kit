@@ -1,4 +1,4 @@
-import type { Language, LocaleCode, Translation } from "@/types/global";
+import type { Language, LocaleCode, Translation } from "@/shared/types/global";
 import { arTranslations } from "./ar";
 import { enTranslations } from "./en";
 import { frTranslations } from "./fr";

@@ -9,6 +9,7 @@ module.exports = {
         "mantine-breakpoint-lg": "75em",
         "mantine-breakpoint-xl": "88em",
       },
+      silent: true, // ✅ ignore undefined vars instead of crashing
     },
   },
 };

@@ -2,7 +2,7 @@ import { authAtom } from "@/apps/auth/atoms/auth-atom.ts";
 import type { LocaleCode } from "@/shared/types/global.ts";
 import axios, { type AxiosResponse } from "axios";
 import { cache } from "smart-cache-ts";
-import { BASEURL, CACHEKEYS, DEFAULTLOCALECODE } from "./flags.ts";
+import { BASEURL, CACHE_KEYS, DEFAULT_LOCALE_CODE } from "./flags.ts";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,
@@ -16,7 +16,7 @@ endpoint.interceptors.request.use(
   (config) => {
     // Accept-Language Header
     config.headers["Accept-Language"] =
-      cache.get<LocaleCode>(CACHEKEYS.LOCALECODE) || DEFAULTLOCALECODE;
+      cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE;
 
     return config;
   },

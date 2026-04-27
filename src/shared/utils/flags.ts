@@ -3,12 +3,12 @@ import type { MantineColorScheme } from "@mantine/core";
 
 export const BASEURL = "https://app.vtechme.net/api";
 
-export const DEFAULTTHEME: MantineColorScheme = "light";
-export const DEFAULTLOCALECODE: LocaleCode = "en";
+export const DEFAULT_THEME: MantineColorScheme = "light";
+export const DEFAULT_LOCALE_CODE: LocaleCode = "en";
 
-export const CACHEKEYS = {
+export const CACHE_KEYS = {
   THEME: "theme",
-  LOCALECODE: "locale-code",
+  LOCALE_CODE: "locale-code",
 };
 
 export const FONTS = {

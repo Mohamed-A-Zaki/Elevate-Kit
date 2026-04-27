@@ -5,15 +5,14 @@ import i18n from "@/shared/localization/i18n";
  */
 export function encode(data: any) {
   const jsonString = JSON.stringify(data);
-  const base64 = btoa(unescape(encodeURIComponent(jsonString)));
-  return base64;
+  return btoa(decodeURI(encodeURIComponent(jsonString)));
 }
 
 /***
  * The `decode` function takes a Base64-encoded string, decodes it back to a JSON string, and then parses it into a JavaScript object. It uses `atob` to decode the Base64 string, `decodeURIComponent` and `unescape` to handle any special characters in the JSON string, and `JSON.parse` to convert the JSON string into an object.
  */
 export function decode(base64: string) {
-  const jsonString = decodeURIComponent(escape(atob(base64)));
+  const jsonString = decodeURIComponent(encodeURI(atob(base64)));
   return JSON.parse(jsonString);
 }
 

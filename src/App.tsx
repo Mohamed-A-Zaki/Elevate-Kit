@@ -1,6 +1,6 @@
 import i18n from "@/shared/localization/i18n";
 import AppRoutes from "@/shared/routes/app-routes";
-import { CACHEKEYS, FONTS } from "@/shared/utils/flags";
+import { CACHEKEYS, DEFAULTTHEME, FONTS } from "@/shared/utils/flags";
 import {
   createTheme,
   DirectionProvider,
@@ -43,7 +43,7 @@ export default function App() {
     <DirectionProvider>
       <MantineProvider
         theme={theme}
-        defaultColorScheme="auto"
+        defaultColorScheme={DEFAULTTHEME}
         colorSchemeManager={colorSchemeManager}
       >
         <AppRoutes />

@@ -1,8 +1,9 @@
-import type { LocaleCode, Theme } from "@/shared/types/global";
+import type { LocaleCode } from "@/shared/types/global";
+import type { MantineColorScheme } from "@mantine/core";
 
 export const BASEURL = "https://app.vtechme.net/api";
 
-export const DEFAULTTHEME: Theme = "light";
+export const DEFAULTTHEME: MantineColorScheme = "light";
 export const DEFAULTLOCALECODE: LocaleCode = "en";
 
 export const CACHEKEYS = {

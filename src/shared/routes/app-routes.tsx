@@ -1,19 +1,19 @@
 import { URLS } from "@/shared/utils/urls";
 import { Navigate, Route, Routes } from "react-router";
 
-import AuthLayout from "@/apps/auth/layout/auth-layout";
-import BaseLayout from "@/apps/front-office/layout/base-layout";
+import AuthLayout from "@/app/layouts/auth-layout";
+import BaseLayout from "@/app/layouts/base-layout";
 
-import ForgetPasswordPage from "@/apps/auth/pages/forget-password-page";
-import LoginPage from "@/apps/auth/pages/login-page";
-import RegisterPage from "@/apps/auth/pages/register-page";
-import ResetPasswordPage from "@/apps/auth/pages/reset-password-page";
-import VerifyEmailPage from "@/apps/auth/pages/verify-email-page";
+import ForgetPasswordPage from "@/app/pages/auth/forget-password-page";
+import LoginPage from "@/app/pages/auth/login-page";
+import RegisterPage from "@/app/pages/auth/register-page";
+import ResetPasswordPage from "@/app/pages/auth/reset-password-page";
+import VerifyEmailPage from "@/app/pages/auth/verify-email-page";
 
-import AboutPage from "@/apps/front-office/about/pages/about-page";
-import HomePage from "@/apps/front-office/home/pages/home-page";
+import AboutPage from "@/app/pages/informative/about-page";
+import HomePage from "@/app/pages/informative/home-page";
 
-import NotFoundPage from "@/apps/front-office/not-found/not-found-page";
+import NotFoundPage from "@/app/pages/not-found/not-found-page";
 
 export default function AppRoutes() {
   return (

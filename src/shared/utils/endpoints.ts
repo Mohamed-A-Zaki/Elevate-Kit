@@ -1,4 +1,4 @@
-import { authAtom } from "@/apps/auth/atoms/auth-atom.ts";
+import { authAtom } from "@/app/atoms/auth-atom.ts";
 import type { LocaleCode } from "@/shared/types/global.ts";
 import axios, { type AxiosResponse } from "axios";
 import { cache } from "smart-cache-ts";

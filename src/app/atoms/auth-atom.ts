@@ -5,7 +5,7 @@ import type {
   RegisterFormData,
   RegisterResponse,
   User,
-} from "@/apps/auth/types/auth";
+} from "@/app/types/auth";
 import { endpoint } from "@/shared/utils/endpoints";
 import { handleError } from "@/shared/utils/handle-error";
 import { notifications } from "@mantine/notifications";

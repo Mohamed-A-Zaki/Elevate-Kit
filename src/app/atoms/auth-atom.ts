@@ -1,3 +1,4 @@
+import { endpoint } from "@/app/api/endpoint";
 import type {
   LoginFormData,
   LoginResponse,
@@ -6,7 +7,6 @@ import type {
   RegisterResponse,
   User,
 } from "@/app/types/auth";
-import { endpoint } from "@/shared/utils/endpoints";
 import { handleError } from "@/shared/utils/handle-error";
 import { notifications } from "@mantine/notifications";
 import { atom } from "@mongez/react-atom";

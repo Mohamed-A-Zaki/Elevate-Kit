@@ -1,0 +1,30 @@
+import { apiRoutes } from "@/app/api/api-routes";
+import { endpoint } from "@/app/api/endpoint";
+import type { User, UsersFilters } from "./users.types";
+
+export const getUsers = async (filters?: UsersFilters): Promise<User[]> => {
+  return (
+    await endpoint.get(apiRoutes.users, {
+      params: filters,
+    })
+  ).data;
+};
+
+export const getUser = async (id: number): Promise<User> => {
+  return (await endpoint.get(`${apiRoutes.users}/${id}`)).data;
+};
+
+export const createUser = async (data: Partial<User>): Promise<User> => {
+  return (await endpoint.post(apiRoutes.users, data)).data;
+};
+
+export const updateUser = async (
+  id: number,
+  data: Partial<User>,
+): Promise<User> => {
+  return (await endpoint.put(`${apiRoutes.users}/${id}`, data)).data;
+};
+
+export const deleteUser = async (id: number): Promise<void> => {
+  await endpoint.delete(`${apiRoutes.users}/${id}`);
+};

@@ -1,7 +1,7 @@
 import type { LocaleCode } from "@/shared/types/global";
 import type { MantineColorScheme } from "@mantine/core";
 
-export const BASEURL = "https://app.vtechme.net/api";
+export const BASEURL = "https://jsonplaceholder.typicode.com";
 
 export const DEFAULT_THEME: MantineColorScheme = "light";
 export const DEFAULT_LOCALE_CODE: LocaleCode = "en";

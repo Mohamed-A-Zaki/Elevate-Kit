@@ -10,12 +10,14 @@ export function handleError(error: unknown) {
       title: "Error",
       message: error.response?.data.message || "Request failed",
       color: "red",
+      withBorder: true,
     });
   } else {
     notifications.show({
       title: "Error",
       message: (error as Error).message,
       color: "red",
+      withBorder: true,
     });
   }
 }

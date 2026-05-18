@@ -13,7 +13,7 @@ export const usersKeys = {
     return [...usersKeys.list(), filters] as const;
   },
 
-  details: (id: number) => {
+  details: (id: string) => {
     return [...usersKeys.all(), "details", id] as const;
   },
 };

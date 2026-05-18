@@ -5,7 +5,7 @@ import type { UsersFilters } from "./users.types";
 
 export const useAllUsersQuery = (filters?: UsersFilters) => {
   return useQuery({
-    queryKey: usersKeys.list_with_filters(filters),
+    queryKey: usersKeys.list_with_filters(filters || {}),
     queryFn: () => getUsers(filters),
   });
 };

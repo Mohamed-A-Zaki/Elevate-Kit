@@ -8,18 +8,17 @@ import { colorSchemeManager, theme } from "../utils/theme";
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <DirectionProvider>
-        <MantineProvider
-          theme={theme}
-          defaultColorScheme={DEFAULT_THEME}
-          colorSchemeManager={colorSchemeManager}
-        >
+    <DirectionProvider>
+      <MantineProvider
+        theme={theme}
+        defaultColorScheme={DEFAULT_THEME}
+        colorSchemeManager={colorSchemeManager}
+      >
+        <QueryClientProvider client={queryClient}>
           {children}
-        </MantineProvider>
-      </DirectionProvider>
-
-      <ReactQueryDevtools initialIsOpen={false} position="right" />
-    </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={false} position="right" />
+        </QueryClientProvider>
+      </MantineProvider>
+    </DirectionProvider>
   );
 }

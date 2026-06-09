@@ -1,16 +1,29 @@
 import {
+  AiOutlineCheckCircle,
+  AiOutlineCloseCircle,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineLoading3Quarters,
+  AiOutlineMinus,
+  AiOutlinePlus,
+} from "react-icons/ai";
+import {
   FaDiscord,
   FaFacebook,
+  FaFolder,
   FaGithub,
   FaInstagram,
   FaLinkedin,
   FaReddit,
+  FaRegCopyright,
   FaTelegram,
   FaTwitter,
   FaWhatsapp,
   FaYoutube,
 } from "react-icons/fa";
-
+import { IoIosArrowBack, IoIosArrowForward, IoIosCode } from "react-icons/io";
+import { IoCopyOutline } from "react-icons/io5";
+import { LuLoaderCircle } from "react-icons/lu";
 import {
   MdAccessTime,
   MdArrowBack,
@@ -43,19 +56,10 @@ import {
   MdShoppingCart,
   MdWarning,
 } from "react-icons/md";
-
-import {
-  AiOutlineCheckCircle,
-  AiOutlineCloseCircle,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-  AiOutlineLoading3Quarters,
-  AiOutlineMinus,
-  AiOutlinePlus,
-} from "react-icons/ai";
+import { SlDislike, SlLike } from "react-icons/sl";
 
 export const Icons = {
-  // Social
+  // ── Social ──────────────────────────────────────────────
   facebook: FaFacebook,
   twitter: FaTwitter,
   instagram: FaInstagram,
@@ -67,24 +71,24 @@ export const Icons = {
   telegram: FaTelegram,
   whatsapp: FaWhatsapp,
 
-  // Contact
+  // ── Contact ─────────────────────────────────────────────
   email: MdEmail,
   phone: MdPhone,
   location: MdLocationOn,
 
-  // Navigation / Layout
+  // ── Navigation ──────────────────────────────────────────
   menu: MdMenu,
   close: MdClose,
   search: MdSearch,
   home: MdHome,
 
-  // User / Auth
+  // ── Auth ────────────────────────────────────────────────
   user: MdPerson,
   login: MdLogin,
   logout: MdLogout,
   settings: MdSettings,
 
-  // Actions
+  // ── Actions ─────────────────────────────────────────────
   add: AiOutlinePlus,
   remove: AiOutlineMinus,
   edit: MdEdit,
@@ -92,37 +96,47 @@ export const Icons = {
   check: MdCheck,
   clear: MdClear,
   refresh: MdRefresh,
+  copy: IoCopyOutline,
 
-  // Arrows
+  // ── Arrows ──────────────────────────────────────────────
   arrowBack: MdArrowBack,
   arrowForward: MdArrowForward,
   arrowUp: MdArrowUpward,
   arrowDown: MdArrowDownward,
+  rightArrow: IoIosArrowForward,
+  leftArrow: IoIosArrowBack,
 
-  // E-commerce
-  cart: MdShoppingCart,
-  favorite: MdFavorite,
+  // ── Status ──────────────────────────────────────────────
+  success: AiOutlineCheckCircle,
+  error: AiOutlineCloseCircle,
+  errorOutline: MdError,
+  info: MdInfo,
+  warning: MdWarning,
 
-  // UI Helpers
+  // ── UI Helpers ──────────────────────────────────────────
   showPassword: AiOutlineEye,
   hidePassword: AiOutlineEyeInvisible,
   loading: AiOutlineLoading3Quarters,
+  loader: LuLoaderCircle,
+  like: SlLike,
+  disLike: SlDislike,
+  code: IoIosCode,
 
-  // Status
-  success: AiOutlineCheckCircle,
-  error: AiOutlineCloseCircle,
-  info: MdInfo,
-  warning: MdWarning,
-  errorOutline: MdError,
-
-  // Time
+  // ── Time ────────────────────────────────────────────────
   calendar: MdCalendarToday,
   clock: MdAccessTime,
 
-  // Files
+  // ── Files ───────────────────────────────────────────────
   download: MdFileDownload,
   upload: MdFileUpload,
+  folder: FaFolder,
 
-  // Notifications
+  // ── Misc ────────────────────────────────────────────────
   notifications: MdNotifications,
-};
+  copyright: FaRegCopyright,
+  cart: MdShoppingCart,
+  favorite: MdFavorite,
+} as const;
+
+export type IconName = keyof typeof Icons;
+export type IconComponent = (typeof Icons)[IconName];

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Primary */
+    --primary-50: #ebfbf1;
+    --primary-100: #d3f5df;
+    --primary-200: #a5eabd;
+    --primary-300: #74de99;
+    --primary-400: #4dd47b;
+    --primary-500: #2fc95f;
+    --primary-600: #1b8354;
+    --primary-700: #176f47;
+    --primary-800: #125b39;
+    --primary-900: #0c472b;
+
+    --gray-color: #f3f4f6;
+    --black-color: #161616;
+
+    /* Semantic */
+    --background: #ffffff;
+    --foreground: #111827;
+    --border-color: #d2d6db;
+  }
+
+  [data-mantine-color-scheme="dark"] {
+    --background: #111827;
+    --foreground: #f3f4f6;
+    --border-color: #374151;
+  }
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border-color: var(--border-color);
+
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+
+  --color-gray-color: var(--gray-color);
+  --color-black-color: var(--black-color);
+}
+
+/* custom styles */

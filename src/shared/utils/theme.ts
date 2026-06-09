@@ -4,21 +4,21 @@ import { CACHE_KEYS, FONTS } from "./flags";
 
 export const theme = createTheme({
   colors: {
-    brand: [
-      "var(--brand-50)",
-      "var(--brand-100)",
-      "var(--brand-200)",
-      "var(--brand-300)",
-      "var(--brand-400)",
-      "var(--brand-500)",
-      "var(--brand-600)",
-      "var(--brand-700)",
-      "var(--brand-800)",
-      "var(--brand-900)",
+    primary: [
+      "var(--primary-50)",
+      "var(--primary-100)",
+      "var(--primary-200)",
+      "var(--primary-300)",
+      "var(--primary-400)",
+      "var(--primary-500)",
+      "var(--primary-600)",
+      "var(--primary-700)",
+      "var(--primary-800)",
+      "var(--primary-900)",
     ],
   },
-  primaryColor: "brand",
-  defaultRadius: "md",
+  primaryColor: "primary",
+  defaultRadius: "sm",
   defaultGradient: {
     from: "orange",
     to: "red",

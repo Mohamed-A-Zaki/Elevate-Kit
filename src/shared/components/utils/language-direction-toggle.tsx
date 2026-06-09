@@ -1,28 +1,11 @@
 import { localeAtom } from "@/shared/atoms/locale-atom";
 import { languages } from "@/shared/localization/languages";
 import type { LocaleCode } from "@/shared/types/global";
-import { ActionIcon, Menu, useDirection } from "@mantine/core";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { ActionIcon, Menu } from "@mantine/core";
 import { FaGlobe } from "react-icons/fa";
 
 export default function LanguageDirectionToggle() {
-  const { i18n } = useTranslation();
-  const { dir, toggleDirection } = useDirection();
   const { locale_code } = localeAtom.useValue();
-
-  useEffect(() => {
-    if (i18n.language !== locale_code) {
-      void i18n.changeLanguage(locale_code);
-    }
-
-    const shouldBeDir =
-      languages.find((l) => l.code === locale_code)?.dir || "ltr";
-
-    if (shouldBeDir !== dir) {
-      toggleDirection();
-    }
-  }, [locale_code, dir, i18n, toggleDirection]);
 
   const handleChange = (code: LocaleCode) => {
     localeAtom.change("locale_code", code);

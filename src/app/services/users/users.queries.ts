@@ -12,7 +12,7 @@ export const useAllUsersQuery = (filters?: UsersFilters) => {
 
 export const useSingleUserQuery = (id: number) => {
   return useQuery({
-    queryKey: usersKeys.details(id),
-    queryFn: () => getUser(id),
+    queryKey: usersKeys.details(id.toString()),
+    queryFn: () => getUser(id.toString()),
   });
 };

@@ -1,12 +1,12 @@
 import { authAtom } from "@/app/atoms/auth-atom.ts";
 import type { LocaleCode } from "@/shared/types/global.ts";
-import axios, { type AxiosResponse } from "axios";
-import { cache } from "smart-cache-ts";
 import {
   BASEURL,
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
-} from "../../shared/utils/flags.ts";
+} from "@/shared/utils/flags.ts";
+import axios, { type AxiosResponse } from "axios";
+import { cache } from "smart-cache-ts";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,

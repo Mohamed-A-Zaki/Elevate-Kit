@@ -104,3 +104,10 @@ export function getCurrentDirection() {
   const rtlLanguages = ["ar"];
   return rtlLanguages.includes(getCurrentLocale()) ? "rtl" : "ltr";
 }
+
+/***
+ * The `formatArabicNumber` function formats a number into an Arabic-formatted string using the `Intl.NumberFormat` API with the "ar-EG" locale.
+ */
+export const formatArabicNumber = (value: number): string => {
+  return new Intl.NumberFormat("ar-EG").format(Number(value));
+};

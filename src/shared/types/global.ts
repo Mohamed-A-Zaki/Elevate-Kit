@@ -1,14 +1,9 @@
-export type LocaleCode = "en" | "ar" | "fr";
-
-export type Theme = "dark" | "light" | "system";
+import type { LOCALES, THEMES } from "../utils/flags";
 
 export type Translation = {
-  [key: string]: string | Translation; // strings or nested objects
+  [key: string]: string | Translation;
 };
 
-export interface Language {
-  code: LocaleCode;
-  label: string;
-  dir: "ltr" | "rtl";
-  translations: Translation;
-}
+export type Theme = (typeof THEMES)[keyof typeof THEMES];
+
+export type LocaleCode = (typeof LOCALES)[keyof typeof LOCALES];

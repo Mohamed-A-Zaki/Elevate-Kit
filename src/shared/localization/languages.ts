@@ -1,28 +1,30 @@
-import type { Language, LocaleCode, Translation } from "@/shared/types/global";
 import { arTranslations } from "./ar";
 import { enTranslations } from "./en";
 import { frTranslations } from "./fr";
 
-export const languages: Language[] = [
+import type { LocaleCode, Translation } from "../types/global";
+import { LOCALES } from "../utils/flags";
+
+export const languages = [
   {
-    code: "en",
+    code: LOCALES.EN,
     label: "English",
     dir: "ltr",
     translations: enTranslations,
   },
   {
-    code: "ar",
+    code: LOCALES.AR,
     label: "العربية",
     dir: "rtl",
     translations: arTranslations,
   },
   {
-    code: "fr",
+    code: LOCALES.FR,
     label: "Français",
     dir: "ltr",
     translations: frTranslations,
   },
-];
+] as const;
 
 // Helper map for i18n resources
 export const resources = languages.reduce(

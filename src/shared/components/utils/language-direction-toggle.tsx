@@ -1,14 +1,19 @@
-import { localeAtom } from "@/shared/atoms/locale-atom";
 import { languages } from "@/shared/localization/languages";
 import type { LocaleCode } from "@/shared/types/global";
+import { DEFAULT_LOCALE_CODE } from "@/shared/utils/flags";
+import { isValidLocale, switchLocalePath } from "@/shared/utils/urls";
 import { ActionIcon, Menu } from "@mantine/core";
 import { FaGlobe } from "react-icons/fa";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 export default function LanguageDirectionToggle() {
-  const { locale_code } = localeAtom.useValue();
+  const { locale } = useParams();
+  const localeCode = isValidLocale(locale) ? locale : DEFAULT_LOCALE_CODE;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleChange = (code: LocaleCode) => {
-    localeAtom.change("locale_code", code);
+    navigate(switchLocalePath(pathname, code));
   };
 
   return (
@@ -24,7 +29,7 @@ export default function LanguageDirectionToggle() {
           <Menu.Item
             key={lang.code}
             onClick={() => handleChange(lang.code)}
-            disabled={locale_code === lang.code}
+            disabled={localeCode === lang.code}
           >
             {lang.label}
           </Menu.Item>

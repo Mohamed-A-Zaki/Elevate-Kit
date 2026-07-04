@@ -17,7 +17,6 @@ export const localeAtom = atom<LocaleAtom>({
 
   beforeUpdate(newValue) {
     cache.set(CACHE_KEYS.LOCALE_CODE, newValue.locale_code);
-    window.location.reload();
     return newValue;
   },
 });

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import type { UpdateUserPayload, User } from "../types";
 import { createUser, deleteUser, updateUser } from "./users.api";
 import { usersKeys } from "./users.keys";
-import type { UpdateUserPayload, User } from "./users.types";
 
 export const useDeleteUserMutation = () => {
   const queryClient = useQueryClient();

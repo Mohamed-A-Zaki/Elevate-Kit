@@ -10,16 +10,16 @@ import AuthLayout from "@/app/layouts/auth-layout";
 import BaseLayout from "@/app/layouts/base-layout";
 import LocaleLayout from "@/shared/layouts/locale-layout";
 
-import ForgetPasswordPage from "@/app/pages/auth/forget-password-page";
-import LoginPage from "@/app/pages/auth/login-page";
-import RegisterPage from "@/app/pages/auth/register-page";
-import ResetPasswordPage from "@/app/pages/auth/reset-password-page";
-import VerifyEmailPage from "@/app/pages/auth/verify-email-page";
+import ForgetPasswordPage from "@/modules/auth/pages/forget-password-page";
+import LoginPage from "@/modules/auth/pages/login-page";
+import RegisterPage from "@/modules/auth/pages/register-page";
+import ResetPasswordPage from "@/modules/auth/pages/reset-password-page";
+import VerifyEmailPage from "@/modules/auth/pages/verify-email-page";
 
-import AboutPage from "@/app/pages/informative/about-page";
-import HomePage from "@/app/pages/informative/home-page";
+import AboutPage from "@/modules/about/pages/about-page";
+import HomePage from "@/modules/home/pages/home-page";
 
-import NotFoundPage from "@/app/pages/not-found/not-found-page";
+import NotFoundPage from "@/modules/not-found/pages/not-found-page";
 
 function LocaleNotFoundRedirect() {
   const { locale } = useParams();

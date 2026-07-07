@@ -1,4 +1,4 @@
-import { authAtom } from "@/app/atoms/auth-atom.ts";
+import { authAtom } from "@/modules/auth/atoms/auth-atom";
 import type { LocaleCode } from "@/shared/types/global.ts";
 import {
   BASEURL,

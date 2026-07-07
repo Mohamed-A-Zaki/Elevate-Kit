@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUser, getUsers } from "./users.api";
 import { usersKeys } from "./users.keys";
-import type { UsersFilters } from "./users.types";
+import type { UsersFilters } from "../types";
+
 
 export const useAllUsersQuery = (filters?: UsersFilters) => {
   return useQuery({

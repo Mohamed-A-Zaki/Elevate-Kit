@@ -1,4 +1,4 @@
-import type { UsersFilters } from "./users.types";
+import type { UsersFilters } from "../types";
 
 export const usersKeys = {
   all: () => {

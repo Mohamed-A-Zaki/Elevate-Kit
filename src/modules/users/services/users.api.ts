@@ -1,6 +1,6 @@
 import { apiRoutes } from "@/shared/api/api-routes";
 import { endpoint } from "@/shared/api/endpoint";
-import type { User, UsersFilters } from "./users.types";
+import type { User, UsersFilters } from "../types";
 
 export const getUsers = async (filters?: UsersFilters): Promise<User[]> => {
   return (

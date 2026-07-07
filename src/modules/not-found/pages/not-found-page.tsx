@@ -1,23 +1,23 @@
 import { preferredLocalePath } from "@/shared/routing";
+import { trans } from "@/shared/utils/trans";
 import { Button } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
 export default function NotFoundPage() {
-  const { t } = useTranslation();
-
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
       <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-        <h2 className="mb-6 text-5xl font-semibold">{t("common.whoops")}</h2>
+        <h2 className="mb-6 text-5xl font-semibold">
+          {trans("common.whoops")}
+        </h2>
         <h3 className="mb-1.5 text-3xl font-semibold">
-          {t("common.somethingWentWrong")}
+          {trans("common.somethingWentWrong")}
         </h3>
         <p className="text-muted-foreground mb-6 max-w-sm">
-          {t("common.pageNotFound")}
+          {trans("common.pageNotFound")}
         </p>
         <Button size="lg" className="rounded-lg text-base">
-          <Link to={preferredLocalePath()}>{t("common.backToHome")}</Link>
+          <Link to={preferredLocalePath()}>{trans("common.backToHome")}</Link>
         </Button>
       </div>
 

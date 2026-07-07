@@ -8,4 +8,7 @@ export const commonTranslations = {
   somethingWentWrong: "حدث خطأ ما",
   pageNotFound: "الصفحة التي تبحث عنها غير موجودة، نقترح العودة إلى الرئيسية.",
   backToHome: "العودة إلى الصفحة الرئيسية",
+  blog: "المدونة",
+  blogsPage: "المدونة",
+  blogDetailsPage: "تفاصيل المقال",
 };

@@ -15,23 +15,28 @@ export const URLS = {
   },
   home: "/",
   about: "/about",
+  blog: "/blog",
+  blogDetails: "/blog/:id",
+  blogDetailsPath: (id: number) => `/blog/${id}`,
   notFound: "/404",
 } as const;
 
-// Derived from URLS so segment names never drift out of sync with the paths above.
-const lastSegment = (path: string) => path.split("/").filter(Boolean).pop()!;
+// Strip leading slash so URLS paths map 1:1 to React Router `path` props.
+const routeSegment = (path: string) => path.replace(/^\//, "");
 
 export const ROUTE_SEGMENTS = {
   auth: {
-    base: lastSegment(URLS.auth.base),
-    login: lastSegment(URLS.auth.login),
-    register: lastSegment(URLS.auth.register),
-    forgotPassword: lastSegment(URLS.auth.forgotPassword),
-    resetPassword: lastSegment(URLS.auth.resetPassword),
-    verifyEmail: lastSegment(URLS.auth.verifyEmail),
+    base: routeSegment(URLS.auth.base),
+    login: routeSegment(URLS.auth.login),
+    register: routeSegment(URLS.auth.register),
+    forgotPassword: routeSegment(URLS.auth.forgotPassword),
+    resetPassword: routeSegment(URLS.auth.resetPassword),
+    verifyEmail: routeSegment(URLS.auth.verifyEmail),
   },
-  about: lastSegment(URLS.about),
-  notFound: lastSegment(URLS.notFound),
+  about: routeSegment(URLS.about),
+  blog: routeSegment(URLS.blog),
+  blogDetails: routeSegment(URLS.blogDetails),
+  notFound: routeSegment(URLS.notFound),
 } as const;
 
 export function isValidLocale(

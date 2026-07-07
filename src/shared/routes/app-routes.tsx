@@ -19,6 +19,8 @@ import VerifyEmailPage from "@/modules/auth/pages/verify-email-page";
 import AboutPage from "@/modules/about/pages/about-page";
 import HomePage from "@/modules/home/pages/home-page";
 
+import BlogDetailsPage from "@/modules/blog/pages/blog-details-page";
+import BlogsPage from "@/modules/blog/pages/blogs-page";
 import NotFoundPage from "@/modules/not-found/pages/not-found-page";
 
 function LocaleNotFoundRedirect() {
@@ -40,7 +42,7 @@ export default function AppRoutes() {
       />
 
       <Route path="/:locale" element={<LocaleLayout />}>
-        <Route path={ROUTE_SEGMENTS.auth.base} element={<AuthLayout />}>
+        <Route element={<AuthLayout />}>
           <Route path={ROUTE_SEGMENTS.auth.login} element={<LoginPage />} />
           <Route
             path={ROUTE_SEGMENTS.auth.register}
@@ -63,6 +65,12 @@ export default function AppRoutes() {
         <Route element={<BaseLayout />}>
           <Route index element={<HomePage />} />
           <Route path={ROUTE_SEGMENTS.about} element={<AboutPage />} />
+
+          <Route path={ROUTE_SEGMENTS.blog} element={<BlogsPage />} />
+          <Route
+            path={ROUTE_SEGMENTS.blogDetails}
+            element={<BlogDetailsPage />}
+          />
         </Route>
 
         <Route path={ROUTE_SEGMENTS.notFound} element={<NotFoundPage />} />

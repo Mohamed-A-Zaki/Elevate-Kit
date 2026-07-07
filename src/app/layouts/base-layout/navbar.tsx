@@ -22,6 +22,9 @@ function Navbar() {
         <Button component={Link} to={preferredLocalePath(URLS.about)}>
           {trans("common.about")}
         </Button>
+        <Button component={Link} to={preferredLocalePath(URLS.blog)}>
+          {trans("common.blog")}
+        </Button>
       </div>
     </div>
   );

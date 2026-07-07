@@ -1,5 +1,5 @@
+import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "@/shared/configurations";
 import type { LocaleCode } from "@/shared/types/global";
-import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "@/shared/utils/flags";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { cache } from "smart-cache-ts";

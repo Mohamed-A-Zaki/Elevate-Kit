@@ -1,4 +1,4 @@
-import type { LOCALES, THEMES } from "../utils/flags";
+import type { LOCALES, THEMES } from "@/shared/configurations";
 
 export type Translation = {
   [key: string]: string | Translation;

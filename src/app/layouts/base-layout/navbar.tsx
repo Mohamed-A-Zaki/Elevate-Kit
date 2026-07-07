@@ -1,7 +1,7 @@
-import LanguageDirectionToggle from "@/shared/components/language-direction-toggle";
+import LocaleSwitcher from "@/shared/components/locale-switcher";
 import { ThemeToggler } from "@/shared/components/theme-toggler";
+import { preferredLocalePath, URLS } from "@/shared/routing";
 import { trans } from "@/shared/utils/trans";
-import { preferredLocalePath, URLS } from "@/shared/utils/urls";
 import { Button } from "@mantine/core";
 import { Link } from "react-router";
 
@@ -9,7 +9,7 @@ function Navbar() {
   return (
     <div className="flex items-center justify-between p-3 border m-3 rounded-md">
       <div className="w-125 max-w-full flex items-center gap-4">
-        <LanguageDirectionToggle />
+        <LocaleSwitcher />
         <div className="flex-1">
           <ThemeToggler variant="select" />
         </div>

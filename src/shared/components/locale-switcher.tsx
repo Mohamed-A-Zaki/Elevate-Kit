@@ -1,27 +1,15 @@
 import { localeAtom } from "@/shared/atoms/locale-atom";
+import { ENABLE_LOCALE_ROUTES } from "@/shared/configurations";
+import { useResolvedLocale } from "@/shared/hooks/use-current-locale";
 import { languages } from "@/shared/localization/languages";
+import { switchLocalePath } from "@/shared/routing";
 import type { LocaleCode } from "@/shared/types/global";
-import {
-  DEFAULT_LOCALE_CODE,
-  ENABLE_LOCALE_ROUTES,
-} from "@/shared/utils/flags";
-import {
-  getPreferredLocale,
-  isValidLocale,
-  switchLocalePath,
-} from "@/shared/utils/urls";
 import { ActionIcon, Menu } from "@mantine/core";
 import { FaGlobe } from "react-icons/fa";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
-export default function LanguageDirectionToggle() {
-  const { locale } = useParams();
-  const { locale_code: atomLocaleCode } = localeAtom.useValue();
-  const localeCode = ENABLE_LOCALE_ROUTES
-    ? isValidLocale(locale)
-      ? locale
-      : DEFAULT_LOCALE_CODE
-    : (atomLocaleCode ?? getPreferredLocale());
+export default function LocaleSwitcher() {
+  const localeCode = useResolvedLocale();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 

@@ -2,8 +2,8 @@ import { arTranslations } from "./ar";
 import { enTranslations } from "./en";
 import { frTranslations } from "./fr";
 
-import type { LocaleCode, Translation } from "../types/global";
-import { LOCALES } from "../utils/flags";
+import { LOCALES } from "@/shared/configurations";
+import type { LocaleCode, Translation } from "@/shared/types/global";
 
 export const languages = [
   {

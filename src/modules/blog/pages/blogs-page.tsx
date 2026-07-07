@@ -1,5 +1,5 @@
 import { trans } from "@/shared/utils/trans";
-import { preferredLocalePath, URLS } from "@/shared/utils/urls";
+import { preferredLocalePath, URLS } from "@/shared/routing";
 import { Button } from "@mantine/core";
 import { Link } from "react-router";
 

@@ -1,4 +1,4 @@
-import { preferredLocalePath } from "@/shared/utils/urls";
+import { preferredLocalePath } from "@/shared/routing";
 import { Button } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";

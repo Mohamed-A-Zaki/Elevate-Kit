@@ -1,10 +1,10 @@
 import { authAtom } from "@/modules/auth/atoms/auth-atom";
-import type { LocaleCode } from "@/shared/types/global.ts";
 import {
   BASEURL,
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
-} from "@/shared/utils/flags.ts";
+} from "@/shared/configurations";
+import type { LocaleCode } from "@/shared/types/global";
 import axios, { type AxiosResponse } from "axios";
 import { cache } from "smart-cache-ts";
 

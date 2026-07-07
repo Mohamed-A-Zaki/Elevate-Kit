@@ -1,5 +1,5 @@
+import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "@/shared/configurations";
 import type { LocaleCode } from "@/shared/types/global";
-import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "@/shared/utils/flags.ts";
 import { atom } from "@mongez/react-atom";
 import { cache } from "smart-cache-ts";
 

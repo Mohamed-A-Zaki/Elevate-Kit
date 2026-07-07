@@ -1,19 +1,12 @@
 import { localeAtom } from "@/shared/atoms/locale-atom";
 import i18n from "@/shared/localization/i18n";
 import { languages } from "@/shared/localization/languages";
-import { getPreferredLocale, isValidLocale } from "@/shared/utils/urls";
+import { useCurrentLocale } from "@/shared/hooks/use-current-locale";
 import { useDirection } from "@mantine/core";
 import { useEffect } from "react";
-import { useParams } from "react-router";
-import { ENABLE_LOCALE_ROUTES } from "../utils/flags";
 
 export default function useLocaleCode() {
-  const { locale } = useParams();
-  const localeCode = ENABLE_LOCALE_ROUTES
-    ? isValidLocale(locale)
-      ? locale
-      : null
-    : getPreferredLocale();
+  const localeCode = useCurrentLocale();
   const { locale_code: atomLocaleCode } = localeAtom.useValue();
   const { dir, toggleDirection } = useDirection();
 

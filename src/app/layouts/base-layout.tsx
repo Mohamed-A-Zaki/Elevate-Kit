@@ -1,8 +1,8 @@
-import Footer from "@/app/componets/layouts/footer";
-import Navbar from "@/app/componets/layouts/navbar";
+import Footer from "@/app/components/layouts/footer";
+import Navbar from "@/app/components/layouts/navbar";
 import { Outlet } from "react-router";
 
-export default function BaseLayout() {
+function BaseLayout() {
   return (
     <>
       <Navbar />
@@ -11,3 +11,5 @@ export default function BaseLayout() {
     </>
   );
 }
+
+export default BaseLayout;

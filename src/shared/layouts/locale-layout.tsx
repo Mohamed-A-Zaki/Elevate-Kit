@@ -1,34 +1,38 @@
-import useLocaleCode from "@/shared/hooks/use-locale-code";
 import {
   getPreferredLocale,
   isValidLocale,
   localizedPath,
   stripLocaleFromPath,
 } from "@/shared/utils/urls";
-import { useEffect } from "react";
 import { Navigate, Outlet, useLocation, useParams } from "react-router";
+import useLocaleCode from "../hooks/use-locale-code";
+
+function InvalidLocaleRedirect() {
+  const location = useLocation();
+
+  return (
+    <Navigate
+      to={localizedPath(
+        getPreferredLocale(),
+        stripLocaleFromPath(location.pathname),
+      )}
+      replace
+    />
+  );
+}
 
 export default function LocaleLayout() {
   const { locale } = useParams();
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log("render locale layout");
-  }, []);
 
   useLocaleCode();
 
   if (!isValidLocale(locale)) {
-    return (
-      <Navigate
-        to={localizedPath(
-          getPreferredLocale(),
-          stripLocaleFromPath(location.pathname),
-        )}
-        replace
-      />
-    );
+    return <InvalidLocaleRedirect />;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }

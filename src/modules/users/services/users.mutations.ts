@@ -4,6 +4,9 @@ import type { UpdateUserPayload, User } from "../types";
 import { createUser, deleteUser, updateUser } from "./users.api";
 import { usersKeys } from "./users.keys";
 
+/**
+ * Hook to delete a user by ID
+ */
 export const useDeleteUserMutation = () => {
   const queryClient = useQueryClient();
 
@@ -17,10 +20,9 @@ export const useDeleteUserMutation = () => {
       /**
        * Remove deleted user from single user cache
        */
-      // queryClient.removeQueries({
-      //   queryKey: usersKeys.details(deletedUserId),
-      // });
-      console.log(deletedUserId);
+      queryClient.removeQueries({
+        queryKey: usersKeys.details(deletedUserId),
+      });
 
       /**
        * Refresh users list
@@ -32,6 +34,9 @@ export const useDeleteUserMutation = () => {
   });
 };
 
+/**
+ * Hook to update a user by ID
+ */
 export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();
 
@@ -41,9 +46,10 @@ export const useUpdateUserMutation = () => {
     },
 
     onSuccess: (updatedUser) => {
-      // Update single user cache
-      // queryClient.setQueryData(usersKeys.details(updatedUser.id), updatedUser);
-      console.log(updatedUser);
+      /**
+       * Update single user cache
+       */
+      queryClient.setQueryData(usersKeys.details(updatedUser.id), updatedUser);
 
       /**
        * Refresh users list
@@ -55,6 +61,9 @@ export const useUpdateUserMutation = () => {
   });
 };
 
+/**
+ * Hook to create a new user
+ */
 export const useCreateUserMutation = () => {
   const queryClient = useQueryClient();
 

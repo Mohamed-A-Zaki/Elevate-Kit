@@ -1,32 +1,41 @@
 import type {
   LoginFormData,
-  LoginResponse,
-  LogoutResponse,
   RegisterFormData,
-  RegisterResponse,
   User,
 } from "@/modules/auth/types/auth";
-import { endpoint } from "@/shared/api/endpoint";
-import { handleError } from "@/shared/utils/handle-error";
-import { notifications } from "@mantine/notifications";
 import { atom } from "@mongez/react-atom";
 import { cache } from "smart-cache-ts";
+import loginService from "../services/login.service";
+import logoutService from "../services/logout.service";
+import registerService from "../services/register.service";
 
 type AuthAtom = {
-  /** user */
+  /**
+   * user object
+   */
   user: User | null;
-  /** token */
+  /***
+   * token string
+   */
   token: string | null;
-  /** loading */
+  /**
+   * loading state
+   */
   loading: boolean;
 };
 
 type AuthAtomActions = {
-  /** login */
+  /**
+   * login service
+   */
   login: (formData: LoginFormData, onSuccess?: () => void) => void;
-  /** logout */
+  /**
+   * logout service
+   */
   logout: (onSuccess?: () => void) => void;
-  /** register */
+  /***
+   * register service
+   */
   register: (formData: RegisterFormData, onSuccess?: () => void) => void;
 };
 
@@ -46,73 +55,17 @@ export const authAtom = atom<AuthAtom, AuthAtomActions>({
   },
 
   actions: {
-    async login(formData: LoginFormData, onSuccess?: () => void) {
-      try {
-        authAtom.change("loading", true);
-
-        const { data } = await endpoint.post<LoginResponse>("/login", formData);
-
-        authAtom.change("user", data.data.user);
-        authAtom.change("token", data.data.token);
-
-        onSuccess?.();
-
-        notifications.show({
-          title: "Success",
-          message: data.message,
-        });
-      } catch (error) {
-        handleError(error);
-      } finally {
-        authAtom.change("loading", false);
-      }
-    },
-
-    async logout(onSuccess?: () => void) {
-      try {
-        authAtom.change("loading", true);
-
-        const { data } = await endpoint.post<LogoutResponse>("/logout");
-
-        authAtom.change("user", null);
-        authAtom.change("token", "");
-
-        onSuccess?.();
-
-        notifications.show({
-          title: "Success",
-          message: data.message,
-        });
-      } catch (error) {
-        handleError(error);
-      } finally {
-        authAtom.change("loading", false);
-      }
-    },
-
-    async register(formData: RegisterFormData, onSuccess?: () => void) {
-      try {
-        authAtom.change("loading", true);
-
-        const { data } = await endpoint.post<RegisterResponse>(
-          "/register",
-          formData,
-        );
-
-        authAtom.change("user", data.data.user);
-        authAtom.change("token", data.data.token);
-
-        onSuccess?.();
-
-        notifications.show({
-          title: "Success",
-          message: data.message,
-        });
-      } catch (error) {
-        handleError(error);
-      } finally {
-        authAtom.change("loading", false);
-      }
-    },
+    /***
+     * login service
+     */
+    login: loginService,
+    /***
+     * logout service
+     */
+    logout: logoutService,
+    /**
+     * register service
+     */
+    register: registerService,
   },
 });

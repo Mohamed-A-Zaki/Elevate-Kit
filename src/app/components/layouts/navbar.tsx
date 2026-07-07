@@ -1,14 +1,11 @@
 import LanguageDirectionToggle from "@/shared/components/language-direction-toggle";
 import { ThemeToggler } from "@/shared/components/theme-toggler";
-import useLocalizedPath from "@/shared/hooks/use-localized-path";
 import { trans } from "@/shared/utils/trans";
-import { URLS } from "@/shared/utils/urls";
+import { preferredLocalePath, URLS } from "@/shared/utils/urls";
 import { Button } from "@mantine/core";
 import { Link } from "react-router";
 
 function Navbar() {
-  const { localizedPath } = useLocalizedPath();
-
   return (
     <div className="flex items-center justify-between p-3 border m-3 rounded-md">
       <div className="w-125 max-w-full flex items-center gap-4">
@@ -19,10 +16,10 @@ function Navbar() {
       </div>
 
       <div className="flex gap-2">
-        <Button component={Link} to={localizedPath(URLS.home)}>
+        <Button component={Link} to={preferredLocalePath(URLS.home)}>
           {trans("common.home")}
         </Button>
-        <Button component={Link} to={localizedPath(URLS.about)}>
+        <Button component={Link} to={preferredLocalePath(URLS.about)}>
           {trans("common.about")}
         </Button>
       </div>

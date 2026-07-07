@@ -35,7 +35,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route
-        path="/"
+        path={URLS.home}
         element={<Navigate to={preferredLocalePath()} replace />}
       />
 

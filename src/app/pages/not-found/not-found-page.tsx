@@ -1,12 +1,10 @@
-import useLocalizedPath from "@/shared/hooks/use-localized-path";
-import { URLS } from "@/shared/utils/urls";
+import { preferredLocalePath } from "@/shared/utils/urls";
 import { Button } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
-  const { localizedPath } = useLocalizedPath();
 
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
@@ -19,7 +17,7 @@ export default function NotFoundPage() {
           {t("common.pageNotFound")}
         </p>
         <Button size="lg" className="rounded-lg text-base">
-          <Link to={localizedPath(URLS.home)}>{t("common.backToHome")}</Link>
+          <Link to={preferredLocalePath()}>{t("common.backToHome")}</Link>
         </Button>
       </div>
 

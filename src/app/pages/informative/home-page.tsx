@@ -1,3 +1,4 @@
+import FileUpload from "@/shared/components/file-upload";
 import { trans } from "@/shared/utils/trans";
 
 export default function HomePage() {
@@ -11,6 +12,8 @@ export default function HomePage() {
           lastName: "Zaki",
         })}
       </div>
+
+      <FileUpload />
     </div>
   );
 }

@@ -5,11 +5,16 @@ import {
   localizedPath,
   stripLocaleFromPath,
 } from "@/shared/utils/urls";
+import { useEffect } from "react";
 import { Navigate, Outlet, useLocation, useParams } from "react-router";
 
 export default function LocaleLayout() {
   const { locale } = useParams();
   const location = useLocation();
+
+  useEffect(() => {
+    console.log("render locale layout");
+  }, []);
 
   useLocaleCode();
 

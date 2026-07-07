@@ -1,11 +1,16 @@
-import LanguageDirectionToggle from "@/shared/components/utils/language-direction-toggle";
-import { ThemeToggler } from "@/shared/components/utils/theme-toggler";
+import { trans } from "@/shared/utils/trans";
 
 export default function HomePage() {
   return (
     <div>
-      <LanguageDirectionToggle />
-      <ThemeToggler variant="icon" />
+      <div className="text-3xl my-5">{trans("common.homePage")}</div>
+
+      <div>
+        {trans("common.greeting", {
+          firstName: "Mohamed",
+          lastName: "Zaki",
+        })}
+      </div>
     </div>
   );
 }

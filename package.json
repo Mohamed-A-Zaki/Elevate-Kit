@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "format": "prettier . --write",
     "prepare": "husky",
-    "update": "ncu -u"
+    "update": "ncu -u",
+    "serve": "npx serve -s dist"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",

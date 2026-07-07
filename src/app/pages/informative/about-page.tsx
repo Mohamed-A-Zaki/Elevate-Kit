@@ -1,3 +1,9 @@
+import { trans } from "@/shared/utils/trans";
+
 export default function AboutPage() {
-  return <div></div>;
+  return (
+    <>
+      <div className="text-3xl my-5">{trans("common.aboutPage")}</div>
+    </>
+  );
 }

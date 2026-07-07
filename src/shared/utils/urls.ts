@@ -1,5 +1,10 @@
 import type { LocaleCode } from "@/shared/types/global";
-import { CACHE_KEYS, DEFAULT_LOCALE_CODE, LOCALES } from "@/shared/utils/flags";
+import {
+  CACHE_KEYS,
+  DEFAULT_LOCALE_CODE,
+  ENABLE_LOCALE_ROUTES,
+  LOCALES,
+} from "@/shared/utils/flags";
 import { cache } from "smart-cache-ts";
 
 const LOCALE_CODES = Object.values(LOCALES);
@@ -24,20 +29,44 @@ export const URLS = {
 // Strip leading slash so URLS paths map 1:1 to React Router `path` props.
 const routeSegment = (path: string) => path.replace(/^\//, "");
 
-export const ROUTE_SEGMENTS = {
-  auth: {
-    base: routeSegment(URLS.auth.base),
-    login: routeSegment(URLS.auth.login),
-    register: routeSegment(URLS.auth.register),
-    forgotPassword: routeSegment(URLS.auth.forgotPassword),
-    resetPassword: routeSegment(URLS.auth.resetPassword),
-    verifyEmail: routeSegment(URLS.auth.verifyEmail),
-  },
-  about: routeSegment(URLS.about),
-  blog: routeSegment(URLS.blog),
-  blogDetails: routeSegment(URLS.blogDetails),
-  notFound: routeSegment(URLS.notFound),
-} as const;
+/**
+ * Recursively mirrors a URLS-like object, converting every string leaf into
+ * a router-relative segment via `routeSegment`. Function leaves (e.g. path
+ * builders like `blogDetailsPath`) are dropped since they aren't route
+ * definitions. Nested objects (e.g. `auth`) are walked recursively.
+ */
+type RouteSegmentsOf<T> = {
+  [K in keyof T as T[K] extends (...args: never[]) => unknown
+    ? never
+    : K]: T[K] extends string
+    ? string
+    : T[K] extends Record<string, unknown>
+      ? RouteSegmentsOf<T[K]>
+      : never;
+};
+
+function toRouteSegments<T extends Record<string, unknown>>(
+  obj: T,
+): RouteSegmentsOf<T> {
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === "function") continue;
+
+    result[key] =
+      typeof value === "string"
+        ? routeSegment(value)
+        : toRouteSegments(value as Record<string, unknown>);
+  }
+
+  return result as RouteSegmentsOf<T>;
+}
+
+// `home` ("/") is intentionally excluded — it's the index route, not a
+// nameable segment — matching the original ROUTE_SEGMENTS shape.
+const { home: _home, ...routableUrls } = URLS;
+
+export const ROUTE_SEGMENTS = toRouteSegments(routableUrls);
 
 export function isValidLocale(
   locale: string | undefined,
@@ -56,16 +85,28 @@ export function localizedPath(
   locale: LocaleCode,
   path: string = URLS.home,
 ): string {
+  if (!ENABLE_LOCALE_ROUTES) {
+    return path;
+  }
+
   if (path === URLS.home) return joinPath(locale);
   return joinPath(locale, path);
 }
 
 export function getLocaleFromPath(pathname: string): LocaleCode | null {
+  if (!ENABLE_LOCALE_ROUTES) {
+    return null;
+  }
+
   const segment = pathname.split("/")[1];
   return isValidLocale(segment) ? segment : null;
 }
 
 export function stripLocaleFromPath(pathname: string): string {
+  if (!ENABLE_LOCALE_ROUTES) {
+    return pathname || URLS.home;
+  }
+
   const locale = getLocaleFromPath(pathname);
 
   if (!locale) {
@@ -80,6 +121,10 @@ export function switchLocalePath(
   pathname: string,
   newLocale: LocaleCode,
 ): string {
+  if (!ENABLE_LOCALE_ROUTES) {
+    return pathname || URLS.home;
+  }
+
   return localizedPath(newLocale, stripLocaleFromPath(pathname));
 }
 

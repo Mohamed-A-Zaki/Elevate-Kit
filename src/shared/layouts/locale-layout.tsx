@@ -6,6 +6,7 @@ import {
 } from "@/shared/utils/urls";
 import { Navigate, Outlet, useLocation, useParams } from "react-router";
 import useLocaleCode from "../hooks/use-locale-code";
+import { ENABLE_LOCALE_ROUTES } from "../utils/flags";
 
 function InvalidLocaleRedirect() {
   const location = useLocation();
@@ -26,13 +27,13 @@ export default function LocaleLayout() {
 
   useLocaleCode();
 
+  if (!ENABLE_LOCALE_ROUTES) {
+    return <Outlet />;
+  }
+
   if (!isValidLocale(locale)) {
     return <InvalidLocaleRedirect />;
   }
 
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }

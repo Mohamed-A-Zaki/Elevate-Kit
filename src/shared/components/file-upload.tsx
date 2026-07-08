@@ -610,7 +610,6 @@ function FileUploadInner<TResult = unknown>(
               e.stopPropagation();
               openRef.current?.();
             }}
-            className="bg-black-color! rounded-lg!"
           >
             {labels.browseButton}
           </Button>

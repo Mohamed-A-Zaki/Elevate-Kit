@@ -42,10 +42,7 @@ export const coreRoutes = (
       <Route path={ROUTE_SEGMENTS.about} element={<AboutPage />} />
 
       <Route path={ROUTE_SEGMENTS.blog} element={<BlogsPage />} />
-      <Route
-        path={ROUTE_SEGMENTS.blogDetails}
-        element={<BlogDetailsPage />}
-      />
+      <Route path={ROUTE_SEGMENTS.blogDetails} element={<BlogDetailsPage />} />
     </Route>
 
     <Route path={ROUTE_SEGMENTS.notFound} element={<NotFoundPage />} />

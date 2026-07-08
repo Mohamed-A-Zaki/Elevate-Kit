@@ -9,9 +9,11 @@ export const URLS = {
   },
   home: "/",
   about: "/about",
+
   blog: "/blog",
   blogDetails: "/blog/:id",
   blogDetailsPath: (id: number) => `/blog/${id}`,
+
   notFound: "/404",
 } as const;
 

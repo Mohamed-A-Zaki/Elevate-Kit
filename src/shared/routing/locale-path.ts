@@ -72,12 +72,12 @@ export function getPreferredLocale(): LocaleCode {
   return cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE;
 }
 
-export function preferredLocalePath(path: string = URLS.home): string {
-  return localizedPath(getPreferredLocale(), path);
-}
-
 export function defaultLocalePath(path: string = URLS.home): string {
   return localizedPath(DEFAULT_LOCALE_CODE, path);
+}
+
+export function preferredLocalePath(path: string = URLS.home): string {
+  return localizedPath(getPreferredLocale(), path);
 }
 
 export function resolveLocaleCode(

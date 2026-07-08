@@ -1,6 +1,6 @@
 import AppRoutes from "@/shared/routes/app-routes";
 import { Notifications } from "@mantine/notifications";
-import Providers from "./app/providers";
+import Providers from "./providers";
 
 export default function App() {
   return (

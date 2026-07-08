@@ -9,4 +9,5 @@ export {
   stripLocaleFromPath,
   switchLocalePath,
 } from "./locale-path";
-export { ROUTE_SEGMENTS, URLS } from "./urls";
+export { ROUTE_SEGMENTS } from "./route-segments";
+export { URLS } from "./urls";

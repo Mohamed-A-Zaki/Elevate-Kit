@@ -1,5 +1,5 @@
 import LocaleSwitcher from "@/shared/components/locale-switcher";
-import { ThemeToggler } from "@/shared/components/theme-toggler";
+import ThemeSwitcher from "@/shared/components/theme-switcher";
 import { preferredLocalePath, URLS } from "@/shared/routing";
 import { trans } from "@/shared/utils/trans";
 import { Button } from "@mantine/core";
@@ -30,7 +30,7 @@ export default function NavbarExample() {
       <div className="flex items-center gap-4">
         <LocaleSwitcher />
         <div className="flex-1">
-          <ThemeToggler variant="select" />
+          <ThemeSwitcher variant="select" />
         </div>
       </div>
     </div>

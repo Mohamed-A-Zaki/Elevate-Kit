@@ -10,7 +10,7 @@ type ThemeTogglerProps = {
   variant: "icon" | "select";
 };
 
-export function ThemeToggler({ variant }: ThemeTogglerProps) {
+export default function ThemeSwitcher({ variant }: ThemeTogglerProps) {
   const { colorScheme, setColorScheme, toggleColorScheme } =
     useMantineColorScheme();
 

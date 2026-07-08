@@ -12,14 +12,13 @@ import VerifyEmailPage from "@/modules/auth/pages/verify-email-page";
 
 import AboutPage from "@/modules/about/pages/about-page";
 import HomePage from "@/modules/home/pages/home-page";
+import NotFoundPage from "@/modules/not-found/pages/not-found-page";
 
 import BlogDetailsPage from "@/modules/blog/pages/blog-details-page";
 import BlogsPage from "@/modules/blog/pages/blogs-page";
-import NotFoundPage from "@/modules/not-found/pages/not-found-page";
-import { Fragment } from "react";
 
 export const coreRoutes = (
-  <Fragment>
+  <>
     <Route element={<AuthLayout />}>
       <Route path={ROUTE_SEGMENTS.auth.login} element={<LoginPage />} />
       <Route path={ROUTE_SEGMENTS.auth.register} element={<RegisterPage />} />
@@ -46,5 +45,5 @@ export const coreRoutes = (
     </Route>
 
     <Route path={ROUTE_SEGMENTS.notFound} element={<NotFoundPage />} />
-  </Fragment>
+  </>
 );

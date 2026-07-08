@@ -1,25 +1,29 @@
+import { endpoint } from "@/shared/api/endpoint";
 import FileUpload, {
   createFileListValidator,
   type UploadedFile,
 } from "@/shared/components/file-upload";
 import { Button, TextInput } from "@mantine/core";
+import { MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { hasLength, isEmail, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
-// async function uploadToServer(file: File) {
-//   const formData = new FormData();
-//   formData.append("file", file);
+async function uploadToServer(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
 
-//   try {
-//     const { data } = await endpoint.post("upload-attachment", formData);
-//     return data;
-//   } catch (error) {
-//     notifications.show({
-//       title: "Error",
-//       message: "Upload failed",
-//       color: "red",
-//     });
-//   }
-// }
+  try {
+    const { data } = await endpoint.post("upload-attachment", formData);
+    return data;
+  } catch (error) {
+    notifications.show({
+      title: "Error",
+      message: "Upload failed",
+      color: "red",
+    });
+    throw error; // Re-throw the error so the component knows upload failed
+  }
+}
 
 interface FormValues {
   name: string;
@@ -84,8 +88,8 @@ export default function FormExample() {
       </div>
       <FileUpload
         {...form.getInputProps("attachments")}
-        // uploadHandler={uploadToServer} // in case of upload file to external server
-        accept={["image/png", "image/jpeg", "application/pdf", "text/csv"]}
+        uploadHandler={uploadToServer} // in case of upload file to external server
+        accept={[...PDF_MIME_TYPE, ...MS_WORD_MIME_TYPE, "image/png"]}
         maxSizeMB={5}
         maxFiles={5}
       />

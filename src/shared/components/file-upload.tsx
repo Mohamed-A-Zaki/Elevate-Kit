@@ -9,6 +9,18 @@ import {
   useRef,
   useState,
 } from "react";
+import { FaFileArchive } from "react-icons/fa";
+import {
+  FaFileCode,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+  FaFilm,
+  FaMusic,
+  FaRegFile,
+} from "react-icons/fa6";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -93,6 +105,34 @@ const MIME_LABELS: Record<string, string> = {
   "application/json": "JSON",
   "application/zip": "ZIP",
 };
+
+function getFileIcon(mimeType: string | undefined): React.ReactNode {
+  if (!mimeType) return <FaRegFile size={24} />;
+
+  if (mimeType.startsWith("image/")) return <FaFileImage size={24} />;
+  if (mimeType === MIME_TYPES.pdf) return <FaFilePdf size={24} />;
+  if (mimeType === MIME_TYPES.doc || mimeType === MIME_TYPES.docx)
+    return <FaFileWord size={24} />;
+  if (mimeType === MIME_TYPES.xls || mimeType === MIME_TYPES.xlsx)
+    return <FaFileExcel size={24} />;
+  if (mimeType === MIME_TYPES.ppt || mimeType === MIME_TYPES.pptx)
+    return <FaFilePowerpoint size={24} />;
+  if (
+    mimeType === "application/zip" ||
+    mimeType === "application/x-zip-compressed"
+  )
+    return <FaFileArchive size={24} />;
+  if (mimeType.startsWith("video/")) return <FaFilm size={24} />;
+  if (mimeType.startsWith("audio/")) return <FaMusic size={24} />;
+  if (
+    mimeType.startsWith("text/") ||
+    mimeType === "application/json" ||
+    mimeType === "text/csv"
+  )
+    return <FaFileCode size={24} />;
+
+  return <FaRegFile size={24} />;
+}
 
 /**
  * All of Mantine's known MIME_TYPES are offered as autocomplete suggestions,
@@ -229,7 +269,11 @@ export function filesToFormData(
   const list = onlyValid
     ? files.filter((f) => !f.error && !f.uploading)
     : files;
-  list.forEach((f) => formData.append(`${fieldName}[]`, f.file, f.file.name));
+  list.forEach((f) => {
+    if (f.file) {
+      formData.append(`${fieldName}[]`, f.file, f.file.name);
+    }
+  });
   return formData;
 }
 
@@ -409,10 +453,22 @@ function FileUploadInner<TResult = unknown>(
       }
       try {
         const result = await effectiveUploadHandler(file);
+        // Create preview only after successful upload
+        const preview =
+          showThumbnails && file.type.startsWith("image/")
+            ? URL.createObjectURL(file)
+            : undefined;
         updateFiles((prev) =>
           prev.map((it) =>
             it.id === id
-              ? { ...it, uploading: false, result, error: undefined }
+              ? {
+                  ...it,
+                  uploading: false,
+                  result,
+                  error: undefined,
+                  preview,
+                  file: undefined as any,
+                }
               : it,
           ),
         );
@@ -421,28 +477,38 @@ function FileUploadInner<TResult = unknown>(
         updateFiles((prev) =>
           prev.map((it) =>
             it.id === id
-              ? { ...it, uploading: false, error: labels.errorUploadFailed }
+              ? {
+                  ...it,
+                  uploading: false,
+                  error: labels.errorUploadFailed,
+                  // Keep file on error so user can retry
+                }
               : it,
           ),
         );
       }
     },
-    [effectiveUploadHandler, updateFiles, labels],
+    [effectiveUploadHandler, updateFiles, labels, showThumbnails],
   );
 
   const addFile = useCallback(
     (file: File) => {
       const id = crypto.randomUUID();
       const customError = validate?.(file) ?? undefined;
+
+      // In manual mode, create preview immediately since there's no upload
+      // In upload mode, preview will be created after successful upload
       const preview =
-        showThumbnails && file.type.startsWith("image/")
+        resolvedMode === "manual" &&
+        showThumbnails &&
+        file.type.startsWith("image/")
           ? URL.createObjectURL(file)
           : undefined;
 
       const entry: UploadedFile<TResult> = {
         id,
         file,
-        uploading: !customError,
+        uploading: !customError && resolvedMode === "upload",
         preview,
         error: customError ?? undefined,
       };
@@ -452,9 +518,9 @@ function FileUploadInner<TResult = unknown>(
         return [...base, entry];
       });
 
-      if (!customError) runUpload(id, file);
+      if (!customError && resolvedMode === "upload") runUpload(id, file);
     },
-    [validate, showThumbnails, multiple, updateFiles, runUpload],
+    [validate, showThumbnails, multiple, updateFiles, runUpload, resolvedMode],
   );
 
   const handleDrop = (accepted: File[]) => {
@@ -507,7 +573,7 @@ function FileUploadInner<TResult = unknown>(
 
   const retryFile = (id: string) => {
     const target = files.find((it) => it.id === id);
-    if (!target) return;
+    if (!target || !target.file) return;
     updateFiles((prev) =>
       prev.map((it) =>
         it.id === id ? { ...it, uploading: true, error: undefined } : it,
@@ -532,7 +598,7 @@ function FileUploadInner<TResult = unknown>(
     try {
       const dataTransfer = new DataTransfer();
       files
-        .filter((f) => !f.error)
+        .filter((f) => !f.error && f.file)
         .forEach((f) => dataTransfer.items.add(f.file));
       nativeInputRef.current.files = dataTransfer.files;
     } catch (err) {
@@ -633,21 +699,23 @@ function FileUploadInner<TResult = unknown>(
                 {item.preview ? (
                   <img
                     src={item.preview}
-                    alt={item.file.name}
+                    alt={item.file?.name || "uploaded file"}
                     className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-lg bg-gray-50 border border-border-color flex items-center justify-center shrink-0 text-xl">
-                    📄
+                  <div className="w-12 h-12 rounded-lg bg-gray-50 border border-border-color flex items-center justify-center shrink-0 text-gray-600">
+                    {getFileIcon(item.file?.type)}
                   </div>
                 )}
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {item.file.name}
+                    {item.file?.name || "Uploaded file"}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {(item.file.size / 1024).toFixed(1)} KB
-                  </p>
+                  {item.file && (
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {(item.file.size / 1024).toFixed(1)} KB
+                    </p>
+                  )}
                   {item.error && (
                     <p className="text-xs text-red-500 mt-0.5">{item.error}</p>
                   )}
@@ -659,7 +727,7 @@ function FileUploadInner<TResult = unknown>(
                   <button
                     type="button"
                     onClick={() => retryFile(item.id)}
-                    className="text-xs text-primary-600 hover:underline cursor-pointer"
+                    className="text-xs text-red-500 hover:underline cursor-pointer"
                   >
                     {labels.retryLabel}
                   </button>

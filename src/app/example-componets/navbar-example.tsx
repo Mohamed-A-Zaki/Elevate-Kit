@@ -20,7 +20,14 @@ export default function NavbarExample() {
         </Button>
       </div>
 
-      <div className="w-125 max-w-full flex items-center gap-4">
+      <div className="text-xl">
+        {trans("common.greeting", {
+          firstName: "Mohamed",
+          lastName: "Zaki",
+        })}
+      </div>
+
+      <div className="flex items-center gap-4">
         <LocaleSwitcher />
         <div className="flex-1">
           <ThemeToggler variant="select" />

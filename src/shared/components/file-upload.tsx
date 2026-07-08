@@ -10,7 +10,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useTranslation } from "react-i18next";
 import { FaFileArchive } from "react-icons/fa";
 import {
   FaFileCode,
@@ -23,6 +22,7 @@ import {
   FaMusic,
   FaRegFile,
 } from "react-icons/fa6";
+import { trans } from "../utils/trans";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -334,30 +334,33 @@ function FileUploadInner<TResult = unknown>(
   }: FileUploadProps<TResult>,
   ref: React.Ref<FileUploadRef<TResult>>,
 ) {
-  const { t } = useTranslation();
-
   const labels: FileUploadLabels = useMemo<FileUploadLabels>(
     () => ({
-      title: t("fileUpload.title"),
+      title: trans("fileUpload.title"),
       subtitle: (maxSizeMB, accepted) =>
-        t("fileUpload.subtitle", { maxSizeMB, accepted }),
-      browseButton: t("fileUpload.browseButton"),
-      addMoreButton: t("fileUpload.addMoreButton"),
-      removeAria: t("fileUpload.removeAria"),
-      retryLabel: t("fileUpload.retryLabel"),
+        trans("fileUpload.subtitle", { maxSizeMB, accepted }),
+      browseButton: trans("fileUpload.browseButton"),
+      addMoreButton: trans("fileUpload.addMoreButton"),
+      removeAria: trans("fileUpload.removeAria"),
+      retryLabel: trans("fileUpload.retryLabel"),
       errorTooLarge: (maxSizeMB) =>
-        t("fileUpload.errorTooLarge", { maxSizeMB }),
-      errorInvalidType: t("fileUpload.errorInvalidType"),
-      errorMaxFiles: (max) => t("fileUpload.errorMaxFiles", { max }),
-      errorRequired: t("fileUpload.errorRequired"),
-      errorUploadFailed: t("fileUpload.errorUploadFailed"),
-      errorFilesInvalid: t("fileUpload.errorFilesInvalid"),
+        trans("fileUpload.errorTooLarge", { maxSizeMB }),
+      errorInvalidType: trans("fileUpload.errorInvalidType"),
+      errorMaxFiles: (max) => trans("fileUpload.errorMaxFiles", { max }),
+      errorRequired: trans("fileUpload.errorRequired"),
+      errorUploadFailed: trans("fileUpload.errorUploadFailed"),
+      errorFilesInvalid: trans("fileUpload.errorFilesInvalid"),
       ...labelsOverride,
     }),
-    [t, labelsOverride],
+    [trans, labelsOverride],
   );
 
   const maxSize = maxSizeMB * 1024 * 1024;
+  // const textClass = isDark ? "text-gray-100" : "text-gray-900";
+  // const mutedTextClass = isDark ? "text-gray-400" : "text-gray-500";
+  // const buttonBorderClass = isDark
+  //   ? "border-gray-700 hover:bg-gray-800 hover:text-gray-100 text-gray-300"
+  //   : "border-border-color hover:bg-gray-50 hover:text-gray-800 text-gray-500";
   const openRef = useRef<() => void>(null);
   const nativeInputRef = useRef<HTMLInputElement>(null);
   const isControlled = value !== undefined;
@@ -429,6 +432,10 @@ function FileUploadInner<TResult = unknown>(
   }, [files, touched, requiredMin, maxFiles]);
 
   const combinedError = externalError ?? dropError ?? validationError;
+  const dropzoneRootClass = `!border-dashed !border-[1.5px] !rounded-xl !transition-colors ${
+    disabled &&
+    "!bg-gray-100 !border-gray-200 !cursor-not-allowed dark:!bg-gray-800 dark:!border-gray-700"
+  } ${combinedError ? "!border-red-400" : ""}`;
 
   const runUpload = useCallback(
     async (id: string, file: File) => {
@@ -639,19 +646,13 @@ function FileUploadInner<TResult = unknown>(
         disabled={disabled || (!multiple && files.some((f) => !f.error))}
         accept={accept}
         classNames={{
-          root: `!border-dashed !border-[1.5px] !rounded-xl !transition-colors ${
-            disabled
-              ? "!bg-gray-100 !border-gray-200 !cursor-not-allowed"
-              : "!border-gray-300 !bg-gray-50 hover:!bg-gray-100 !cursor-pointer"
-          } ${combinedError ? "!border-red-400" : ""}`,
+          root: dropzoneRootClass,
           inner: "!pointer-events-none",
         }}
       >
         <div className="flex flex-col items-center justify-center text-center py-8 px-4">
-          <p className="text-base font-medium text-gray-900 mb-1">
-            {labels.title}
-          </p>
-          <p className="text-sm text-gray-500 leading-relaxed mb-5">
+          <p className={`text-base font-medium mb-1`}>{labels.title}</p>
+          <p className={`text-sm leading-relaxed mb-5`}>
             {labels.subtitle(maxSizeMB, acceptedLabel)}
           </p>
           <Button
@@ -676,7 +677,7 @@ function FileUploadInner<TResult = unknown>(
           {files.map((item) => (
             <div
               key={item.id}
-              className={`flex items-center justify-between gap-3 bg-white border rounded-xl px-3.5 py-2.5 ${
+              className={`flex items-center justify-between gap-3 border rounded-xl px-3.5 py-2.5 ${
                 item.error ? "border-red-300" : "border-border-color"
               }`}
             >
@@ -684,21 +685,23 @@ function FileUploadInner<TResult = unknown>(
                 {item.preview ? (
                   <img
                     src={item.preview}
-                    alt={item.file?.name || t("fileUpload.uploadedFile")}
+                    alt={item.file?.name || trans("fileUpload.uploadedFile")}
                     className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-lg bg-gray-50 border border-border-color flex items-center justify-center shrink-0 text-gray-600">
+                  <div
+                    className={`w-12 h-12 rounded-lg border border-border-color flex items-center justify-center shrink-0`}
+                  >
                     {getFileIcon(item.file?.type)}
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {item.file?.name || t("fileUpload.uploadedFile")}
+                  <p className={`text-sm font-medium truncate`}>
+                    {item.file?.name || trans("fileUpload.uploadedFile")}
                   </p>
                   {item.file && (
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {t("fileUpload.sizeInKb", {
+                    <p className={`text-xs mt-0.5`}>
+                      {trans("fileUpload.sizeInKb", {
                         size: (item.file.size / 1024).toFixed(1),
                       })}
                     </p>
@@ -737,7 +740,7 @@ function FileUploadInner<TResult = unknown>(
                   type="button"
                   onClick={() => removeFile(item.id)}
                   disabled={disabled}
-                  className="text-gray-400 cursor-pointer hover:text-gray-700 hover:bg-gray-100 p-1 rounded-md transition-colors"
+                  className={`cursor-pointer p-1 rounded-md transition-colors`}
                   aria-label={labels.removeAria}
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -758,7 +761,7 @@ function FileUploadInner<TResult = unknown>(
               type="button"
               onClick={() => openRef.current?.()}
               disabled={disabled}
-              className="mt-1 cursor-pointer self-start flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 border border-border-color hover:bg-gray-50 px-4 py-1.5 rounded-lg transition-colors"
+              className={`mt-1 cursor-pointer self-start flex items-center gap-1.5 text-sm border border-border-color px-4 py-1.5 rounded-lg transition-colors`}
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path

@@ -1,3 +1,4 @@
+import i18n from "@/shared/localization/i18n";
 import { Button, Loader } from "@mantine/core";
 import { Dropzone, type FileRejection, MIME_TYPES } from "@mantine/dropzone";
 import {
@@ -9,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { FaFileArchive } from "react-icons/fa";
 import {
   FaFileCode,
@@ -53,40 +55,6 @@ export interface FileUploadLabels {
   errorFilesInvalid: string;
 }
 
-export const arabicLabels: FileUploadLabels = {
-  title: "رفع المرفقات",
-  subtitle: (maxSizeMB, accepted) =>
-    `الحد الأقصى لحجم الملف المسموح به هو ${maxSizeMB} ميجابايت، وتشمل الصيغ المدعومة ${accepted}`,
-  browseButton: "تصفح الملفات",
-  addMoreButton: "إضافة ملفات أخرى",
-  removeAria: "إزالة الملف",
-  retryLabel: "إعادة المحاولة",
-  errorTooLarge: (maxSizeMB) => `حجم الملف أكبر من ${maxSizeMB} ميجابايت`,
-  errorInvalidType: "صيغة الملف غير مدعومة",
-  errorMaxFiles: (max) => `لا يمكن رفع أكثر من ${max} ملفات`,
-  errorRequired: "هذا الحقل مطلوب، الرجاء رفع ملف واحد على الأقل",
-  errorUploadFailed: "فشل رفع الملف، حاول مرة أخرى",
-  errorFilesInvalid:
-    "الملف المرفوع غير صالح، يرجى مراجعة الخطأ الموضح أدناه وإصلاحه",
-};
-
-export const englishLabels: FileUploadLabels = {
-  title: "Upload attachments",
-  subtitle: (maxSizeMB, accepted) =>
-    `Max file size ${maxSizeMB}MB. Supported formats: ${accepted}`,
-  browseButton: "Browse files",
-  addMoreButton: "Add more files",
-  removeAria: "Remove file",
-  retryLabel: "Retry",
-  errorTooLarge: (maxSizeMB) => `File is larger than ${maxSizeMB}MB`,
-  errorInvalidType: "File type is not supported",
-  errorMaxFiles: (max) => `You can't upload more than ${max} files`,
-  errorRequired: "This field is required, please upload at least one file",
-  errorUploadFailed: "Upload failed, please try again",
-  errorFilesInvalid:
-    "The uploaded file isn't valid, please check the error shown below and fix it",
-};
-
 const MIME_LABELS: Record<string, string> = {
   [MIME_TYPES.png]: "PNG",
   [MIME_TYPES.jpeg]: "JPG",
@@ -105,6 +73,33 @@ const MIME_LABELS: Record<string, string> = {
   "application/json": "JSON",
   "application/zip": "ZIP",
 };
+
+function getFileUploadLabels(
+  messages?: Partial<
+    Pick<
+      FileUploadLabels,
+      "errorRequired" | "errorMaxFiles" | "errorFilesInvalid"
+    >
+  >,
+): FileUploadLabels {
+  return {
+    title: i18n.t("fileUpload.title"),
+    subtitle: (maxSizeMB, accepted) =>
+      i18n.t("fileUpload.subtitle", { maxSizeMB, accepted }),
+    browseButton: i18n.t("fileUpload.browseButton"),
+    addMoreButton: i18n.t("fileUpload.addMoreButton"),
+    removeAria: i18n.t("fileUpload.removeAria"),
+    retryLabel: i18n.t("fileUpload.retryLabel"),
+    errorTooLarge: (maxSizeMB) =>
+      i18n.t("fileUpload.errorTooLarge", { maxSizeMB }),
+    errorInvalidType: i18n.t("fileUpload.errorInvalidType"),
+    errorMaxFiles: (max) => i18n.t("fileUpload.errorMaxFiles", { max }),
+    errorRequired: i18n.t("fileUpload.errorRequired"),
+    errorUploadFailed: i18n.t("fileUpload.errorUploadFailed"),
+    errorFilesInvalid: i18n.t("fileUpload.errorFilesInvalid"),
+    ...messages,
+  };
+}
 
 function getFileIcon(mimeType: string | undefined): React.ReactNode {
   if (!mimeType) return <FaRegFile size={24} />;
@@ -152,19 +147,6 @@ export interface FileUploadProps<TResult = unknown> {
   /** Field name, useful when wiring into plain `<form>` submits. */
   name?: string;
 
-  /**
-   * Which of the two supported flows this field runs:
-   * - `"upload"` — each file is sent to `uploadHandler` immediately on drop (e.g. to a separate
-   *   upload microservice). You typically read the returned `result` (a url/id/etc) off each
-   *   file at submit time and send *that value* to your backend as a normal text field.
-   * - `"manual"` — files are just held locally, nothing is sent anywhere by this component.
-   *   `uploadHandler` (if passed) is ignored. You grab the raw `File` objects at submit time
-   *   (via `onFilesChange`, `ref.getFiles()`, or `ref.getFormData()`) and send them as part of
-   *   your own multipart form submission.
-   * @default uploadHandler ? "upload" : "manual"
-   */
-  mode?: "upload" | "manual";
-
   /** Controlled list of files — pass together with `onChange` to drive from parent/RHF state. */
   value?: UploadedFile<TResult>[];
   /** Initial files when used uncontrolled (no `value` passed). */
@@ -175,7 +157,7 @@ export interface FileUploadProps<TResult = unknown> {
   onFilesChange?: (files: File[], allFiles: UploadedFile<TResult>[]) => void;
 
   /**
-   * Async uploader used only when `mode="upload"`. Receives the raw `File`, resolve with
+   * Async uploader that receives the raw `File`, resolve with
    * anything you want stored as `result` (server URL, file id, etc).
    */
   uploadHandler?: (file: File) => Promise<TResult>;
@@ -185,7 +167,7 @@ export interface FileUploadProps<TResult = unknown> {
   /**
    * Keep a real (visually hidden) `<input type="file">` in sync with the current files via
    * `DataTransfer`, so a plain native (non-JS/AJAX) `<form>` submit carries the files too under
-   * `name`. Handy for `mode="manual"` when you're not building `FormData` yourself.
+   * `name`.
    * @default false
    */
   syncNativeInput?: boolean;
@@ -237,16 +219,14 @@ export interface FileUploadRef<TResult = unknown> {
   /** Runs required/minFiles/maxFiles/per-file-error checks, returns true if valid. Also marks the field as touched so errors render. */
   validate: () => boolean;
   /**
-   * Builds a `FormData` from the current valid raw files — the main tool for `mode="manual"`.
+   * Builds a `FormData` from the current valid raw files.
    * Merge it into your own FormData or send it as-is.
    */
   getFormData: (fieldName?: string) => FormData;
 }
 
 /**
- * Appends raw `File` objects from an `UploadedFile[]` list onto a `FormData`, for `mode="manual"`
- * flows where the files travel as part of your own multipart form submission instead of being
- * uploaded by this component.
+ * Appends raw `File` objects from an `UploadedFile[]` list onto a `FormData`.
  *
  * @example
  * const formData = filesToFormData(fileUploadRef.current.getFiles(), { fieldName: "attachments" });
@@ -303,11 +283,8 @@ export function createFileListValidator(
     dir?: "rtl" | "ltr";
   } = {},
 ) {
-  const { required, minFiles, maxFiles, messages, dir = "rtl" } = options;
-  const labels = {
-    ...(dir === "rtl" ? arabicLabels : englishLabels),
-    ...messages,
-  };
+  const { required, minFiles, maxFiles, messages } = options;
+  const labels = getFileUploadLabels(messages);
   const requiredMin = minFiles ?? (required ? 1 : 0);
 
   return (value: UploadedFile[] | undefined | null): string | null => {
@@ -335,7 +312,6 @@ export function createFileListValidator(
 function FileUploadInner<TResult = unknown>(
   {
     name,
-    mode,
     value,
     defaultValue,
     onChange,
@@ -358,17 +334,28 @@ function FileUploadInner<TResult = unknown>(
   }: FileUploadProps<TResult>,
   ref: React.Ref<FileUploadRef<TResult>>,
 ) {
-  const labels: FileUploadLabels = {
-    ...(dir === "rtl" ? arabicLabels : englishLabels),
-    ...labelsOverride,
-  };
+  const { t } = useTranslation();
 
-  // "upload" flow calls uploadHandler on drop; "manual" flow never does — files just
-  // sit here for you to grab (as raw File[]) at submit time.
-  const resolvedMode: "upload" | "manual" =
-    mode ?? (uploadHandler ? "upload" : "manual");
-  const effectiveUploadHandler =
-    resolvedMode === "upload" ? uploadHandler : undefined;
+  const labels: FileUploadLabels = useMemo<FileUploadLabels>(
+    () => ({
+      title: t("fileUpload.title"),
+      subtitle: (maxSizeMB, accepted) =>
+        t("fileUpload.subtitle", { maxSizeMB, accepted }),
+      browseButton: t("fileUpload.browseButton"),
+      addMoreButton: t("fileUpload.addMoreButton"),
+      removeAria: t("fileUpload.removeAria"),
+      retryLabel: t("fileUpload.retryLabel"),
+      errorTooLarge: (maxSizeMB) =>
+        t("fileUpload.errorTooLarge", { maxSizeMB }),
+      errorInvalidType: t("fileUpload.errorInvalidType"),
+      errorMaxFiles: (max) => t("fileUpload.errorMaxFiles", { max }),
+      errorRequired: t("fileUpload.errorRequired"),
+      errorUploadFailed: t("fileUpload.errorUploadFailed"),
+      errorFilesInvalid: t("fileUpload.errorFilesInvalid"),
+      ...labelsOverride,
+    }),
+    [t, labelsOverride],
+  );
 
   const maxSize = maxSizeMB * 1024 * 1024;
   const openRef = useRef<() => void>(null);
@@ -445,14 +432,14 @@ function FileUploadInner<TResult = unknown>(
 
   const runUpload = useCallback(
     async (id: string, file: File) => {
-      if (!effectiveUploadHandler) {
+      if (!uploadHandler) {
         updateFiles((prev) =>
           prev.map((it) => (it.id === id ? { ...it, uploading: false } : it)),
         );
         return;
       }
       try {
-        const result = await effectiveUploadHandler(file);
+        const result = await uploadHandler(file);
         // Create preview only after successful upload
         const preview =
           showThumbnails && file.type.startsWith("image/")
@@ -488,7 +475,7 @@ function FileUploadInner<TResult = unknown>(
         );
       }
     },
-    [effectiveUploadHandler, updateFiles, labels, showThumbnails],
+    [uploadHandler, updateFiles, labels, showThumbnails],
   );
 
   const addFile = useCallback(
@@ -496,19 +483,17 @@ function FileUploadInner<TResult = unknown>(
       const id = crypto.randomUUID();
       const customError = validate?.(file) ?? undefined;
 
-      // In manual mode, create preview immediately since there's no upload
-      // In upload mode, preview will be created after successful upload
+      // If no uploadHandler, create preview immediately for images
+      // If uploadHandler exists, preview will be created after successful upload
       const preview =
-        resolvedMode === "manual" &&
-        showThumbnails &&
-        file.type.startsWith("image/")
+        !uploadHandler && showThumbnails && file.type.startsWith("image/")
           ? URL.createObjectURL(file)
           : undefined;
 
       const entry: UploadedFile<TResult> = {
         id,
         file,
-        uploading: !customError && resolvedMode === "upload",
+        uploading: !customError && !!uploadHandler,
         preview,
         error: customError ?? undefined,
       };
@@ -518,9 +503,9 @@ function FileUploadInner<TResult = unknown>(
         return [...base, entry];
       });
 
-      if (!customError && resolvedMode === "upload") runUpload(id, file);
+      if (!customError && uploadHandler) runUpload(id, file);
     },
-    [validate, showThumbnails, multiple, updateFiles, runUpload, resolvedMode],
+    [validate, showThumbnails, multiple, updateFiles, runUpload, uploadHandler],
   );
 
   const handleDrop = (accepted: File[]) => {
@@ -699,7 +684,7 @@ function FileUploadInner<TResult = unknown>(
                 {item.preview ? (
                   <img
                     src={item.preview}
-                    alt={item.file?.name || "uploaded file"}
+                    alt={item.file?.name || t("fileUpload.uploadedFile")}
                     className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
                   />
                 ) : (
@@ -709,11 +694,13 @@ function FileUploadInner<TResult = unknown>(
                 )}
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {item.file?.name || "Uploaded file"}
+                    {item.file?.name || t("fileUpload.uploadedFile")}
                   </p>
                   {item.file && (
                     <p className="text-xs text-gray-400 mt-0.5">
-                      {(item.file.size / 1024).toFixed(1)} KB
+                      {t("fileUpload.sizeInKb", {
+                        size: (item.file.size / 1024).toFixed(1),
+                      })}
                     </p>
                   )}
                   {item.error && (

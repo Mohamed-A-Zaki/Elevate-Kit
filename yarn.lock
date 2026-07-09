@@ -429,6 +429,11 @@
     "@mongez/events" "^2.2.0"
     "@mongez/reinforcements" "^3.1.0"
 
+"@mongez/dom@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@mongez/dom/-/dom-1.2.4.tgz#f634dc0267c60051688e76ffaa1f3df0b7ed3a14"
+  integrity sha512-j0Xh9CFZxCUArk/NrVbgHcgYRsCh6E0XJkT/6PIMU76p0TxJbUC9sKSK4tg3fVxRhzL8jvpgw9tTAWIRRkm3KQ==
+
 "@mongez/events@^2.2.0":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@mongez/events/-/events-2.2.6.tgz#e340c81ea6eb151d5cc01d6cab654da1218204be"
@@ -440,6 +445,11 @@
   integrity sha512-dpy0pe9aOrtxigU3QNPAKkQMpz0TKrT/S7WbH7GxCiflhcGkB1SQFhlOOV8u8QCu+Y5muhDkCA3gHyvp/TjlUQ==
   dependencies:
     "@mongez/atom" "^6.0.0"
+
+"@mongez/react-helmet@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@mongez/react-helmet/-/react-helmet-1.2.3.tgz#8be47ebd6cb3b41d90c69c240a1069ec04dc7424"
+  integrity sha512-+rUhu7ByU46vYp/pNgyPCNuDh7h1+5hE8obpAS52eWqMSbkdotbMT5MkjGlzqgx7PfYVIjEMWgtIf9bGZ9Zdgw==
 
 "@mongez/reinforcements@^3.1.0":
   version "3.3.0"

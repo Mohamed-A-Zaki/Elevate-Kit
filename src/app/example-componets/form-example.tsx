@@ -59,7 +59,7 @@ export default function FormExample() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 p-5 border rounded-md m-5"
+      className="flex flex-col gap-4 p-5 border border-border-color rounded-md m-5"
     >
       <div className="grid grid-cols-2 gap-4">
         <TextInput

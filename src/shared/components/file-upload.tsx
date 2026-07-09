@@ -1,4 +1,3 @@
-import i18n from "@/shared/localization/i18n";
 import { Button, Loader } from "@mantine/core";
 import { Dropzone, type FileRejection, MIME_TYPES } from "@mantine/dropzone";
 import {
@@ -39,6 +38,14 @@ export interface UploadedFile<TResult = unknown> {
   result?: TResult;
 }
 
+type FileStatus = "error" | "uploading" | "done";
+
+function getFileStatus(item: UploadedFile<unknown>): FileStatus {
+  if (item.error) return "error";
+  if (item.uploading) return "uploading";
+  return "done";
+}
+
 export interface FileUploadLabels {
   title: string;
   subtitle: (maxSizeMB: number, accepted: string) => string;
@@ -51,8 +58,10 @@ export interface FileUploadLabels {
   errorMaxFiles: (max: number) => string;
   errorRequired: string;
   errorUploadFailed: string;
-  /** shown at the top when file(s) were added but all of them have errors — distinct from errorRequired */
+  /** shown when file(s) were added but all of them have errors — distinct from errorRequired */
   errorFilesInvalid: string;
+  uploadedFile: string;
+  sizeInKb: (size: string) => string;
 }
 
 const MIME_LABELS: Record<string, string> = {
@@ -74,30 +83,26 @@ const MIME_LABELS: Record<string, string> = {
   "application/zip": "ZIP",
 };
 
-function getFileUploadLabels(
-  messages?: Partial<
-    Pick<
-      FileUploadLabels,
-      "errorRequired" | "errorMaxFiles" | "errorFilesInvalid"
-    >
-  >,
-): FileUploadLabels {
+/** Single source of truth for labels — used by both the component and the standalone validator. */
+function buildLabels(overrides?: Partial<FileUploadLabels>): FileUploadLabels {
   return {
-    title: i18n.t("fileUpload.title"),
+    title: trans("fileUpload.title"),
     subtitle: (maxSizeMB, accepted) =>
-      i18n.t("fileUpload.subtitle", { maxSizeMB, accepted }),
-    browseButton: i18n.t("fileUpload.browseButton"),
-    addMoreButton: i18n.t("fileUpload.addMoreButton"),
-    removeAria: i18n.t("fileUpload.removeAria"),
-    retryLabel: i18n.t("fileUpload.retryLabel"),
+      trans("fileUpload.subtitle", { maxSizeMB, accepted }),
+    browseButton: trans("fileUpload.browseButton"),
+    addMoreButton: trans("fileUpload.addMoreButton"),
+    removeAria: trans("fileUpload.removeAria"),
+    retryLabel: trans("fileUpload.retryLabel"),
     errorTooLarge: (maxSizeMB) =>
-      i18n.t("fileUpload.errorTooLarge", { maxSizeMB }),
-    errorInvalidType: i18n.t("fileUpload.errorInvalidType"),
-    errorMaxFiles: (max) => i18n.t("fileUpload.errorMaxFiles", { max }),
-    errorRequired: i18n.t("fileUpload.errorRequired"),
-    errorUploadFailed: i18n.t("fileUpload.errorUploadFailed"),
-    errorFilesInvalid: i18n.t("fileUpload.errorFilesInvalid"),
-    ...messages,
+      trans("fileUpload.errorTooLarge", { maxSizeMB }),
+    errorInvalidType: trans("fileUpload.errorInvalidType"),
+    errorMaxFiles: (max) => trans("fileUpload.errorMaxFiles", { max }),
+    errorRequired: trans("fileUpload.errorRequired"),
+    errorUploadFailed: trans("fileUpload.errorUploadFailed"),
+    errorFilesInvalid: trans("fileUpload.errorFilesInvalid"),
+    uploadedFile: trans("fileUpload.uploadedFile"),
+    sizeInKb: (size) => trans("fileUpload.sizeInKb", { size }),
+    ...overrides,
   };
 }
 
@@ -200,9 +205,6 @@ export interface FileUploadProps<TResult = unknown> {
   /** Show image thumbnails for image files.
    * @default true */
   showThumbnails?: boolean;
-  /** Text direction — also selects the default label set (Arabic for rtl, English for ltr).
-   * @default "rtl" */
-  dir?: "rtl" | "ltr";
   /** Override any subset of the displayed strings (title, buttons, error messages...). */
   labels?: Partial<FileUploadLabels>;
   /** Extra classes applied to the root wrapper div. */
@@ -247,7 +249,7 @@ export function filesToFormData(
     onlyValid = true,
   } = options;
   const list = onlyValid
-    ? files.filter((f) => !f.error && !f.uploading)
+    ? files.filter((f) => getFileStatus(f) === "done")
     : files;
   list.forEach((f) => {
     if (f.file) {
@@ -274,17 +276,11 @@ export function createFileListValidator(
     required?: boolean;
     minFiles?: number;
     maxFiles?: number;
-    messages?: Partial<
-      Pick<
-        FileUploadLabels,
-        "errorRequired" | "errorMaxFiles" | "errorFilesInvalid"
-      >
-    >;
-    dir?: "rtl" | "ltr";
+    messages?: Partial<FileUploadLabels>;
   } = {},
 ) {
   const { required, minFiles, maxFiles, messages } = options;
-  const labels = getFileUploadLabels(messages);
+  const labels = buildLabels(messages);
   const requiredMin = minFiles ?? (required ? 1 : 0);
 
   return (value: UploadedFile[] | undefined | null): string | null => {
@@ -294,11 +290,12 @@ export function createFileListValidator(
 
     if (requiredMin > 0 && files.length === 0) return labels.errorRequired;
 
-    const withErrors = files.filter((f) => f.error);
-    if (withErrors.length)
-      return withErrors[0].error ?? labels.errorFilesInvalid;
+    const firstErrored = files.find((f) => f.error);
+    if (firstErrored) return firstErrored.error ?? labels.errorFilesInvalid;
 
-    const settledCount = files.filter((f) => !f.error).length;
+    const settledCount = files.filter(
+      (f) => getFileStatus(f) === "done",
+    ).length;
     if (requiredMin > 0 && settledCount < requiredMin)
       return labels.errorFilesInvalid;
     return null;
@@ -328,39 +325,16 @@ function FileUploadInner<TResult = unknown>(
     disabled = false,
     error: externalError,
     showThumbnails = true,
-    dir = "rtl",
     labels: labelsOverride,
     className = "",
   }: FileUploadProps<TResult>,
   ref: React.Ref<FileUploadRef<TResult>>,
 ) {
-  const labels: FileUploadLabels = useMemo<FileUploadLabels>(
-    () => ({
-      title: trans("fileUpload.title"),
-      subtitle: (maxSizeMB, accepted) =>
-        trans("fileUpload.subtitle", { maxSizeMB, accepted }),
-      browseButton: trans("fileUpload.browseButton"),
-      addMoreButton: trans("fileUpload.addMoreButton"),
-      removeAria: trans("fileUpload.removeAria"),
-      retryLabel: trans("fileUpload.retryLabel"),
-      errorTooLarge: (maxSizeMB) =>
-        trans("fileUpload.errorTooLarge", { maxSizeMB }),
-      errorInvalidType: trans("fileUpload.errorInvalidType"),
-      errorMaxFiles: (max) => trans("fileUpload.errorMaxFiles", { max }),
-      errorRequired: trans("fileUpload.errorRequired"),
-      errorUploadFailed: trans("fileUpload.errorUploadFailed"),
-      errorFilesInvalid: trans("fileUpload.errorFilesInvalid"),
-      ...labelsOverride,
-    }),
-    [trans, labelsOverride],
-  );
+  const labels = useMemo(() => buildLabels(labelsOverride), [labelsOverride]);
 
   const maxSize = maxSizeMB * 1024 * 1024;
-  // const textClass = isDark ? "text-gray-100" : "text-gray-900";
-  // const mutedTextClass = isDark ? "text-gray-400" : "text-gray-500";
-  // const buttonBorderClass = isDark
-  //   ? "border-gray-700 hover:bg-gray-800 hover:text-gray-100 text-gray-300"
-  //   : "border-border-color hover:bg-gray-50 hover:text-gray-800 text-gray-500";
+  const requiredMin = minFiles ?? (required ? 1 : 0);
+
   const openRef = useRef<() => void>(null);
   const nativeInputRef = useRef<HTMLInputElement>(null);
   const isControlled = value !== undefined;
@@ -384,7 +358,7 @@ function FileUploadInner<TResult = unknown>(
   // calls can fire back-to-back in the same tick (e.g. "add file" then "mark done" when
   // there's no real async delay) — before React has re-rendered with the first update.
   // Reading `value`/`internalFiles` directly in that second call would see stale data and
-  // silently drop the first change (this caused files to vanish right after being added).
+  // silently drop the first change.
   const filesRef = useRef<UploadedFile<TResult>[]>(files);
   useEffect(() => {
     filesRef.current = files;
@@ -402,7 +376,7 @@ function FileUploadInner<TResult = unknown>(
 
   // notify onFilesChange whenever the "settled" set of files changes
   useEffect(() => {
-    const ready = files.filter((f) => !f.uploading && !f.error);
+    const ready = files.filter((f) => getFileStatus(f) === "done");
     onFilesChange?.(
       ready.map((f) => f.file),
       files,
@@ -410,32 +384,32 @@ function FileUploadInner<TResult = unknown>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
-  const requiredMin = minFiles ?? (required ? 1 : 0);
-
   const validationError = useMemo(() => {
     if (!touched) return null;
-    if (maxFiles && files.length > maxFiles) {
+    if (maxFiles && files.length > maxFiles)
       return labels.errorMaxFiles(maxFiles);
-    }
     // truly empty — nothing was ever added
-    if (requiredMin > 0 && files.length === 0) {
-      return labels.errorRequired;
-    }
-    const settledCount = files.filter((f) => !f.error).length;
+    if (requiredMin > 0 && files.length === 0) return labels.errorRequired;
+    const settledCount = files.filter(
+      (f) => getFileStatus(f) === "done",
+    ).length;
     if (requiredMin > 0 && settledCount < requiredMin) {
       // a file WAS provided but it failed validation/upload — say so instead of
       // claiming the field is "required", which is confusing when a file is right there.
       return labels.errorFilesInvalid;
     }
     return null;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [files, touched, requiredMin, maxFiles]);
+  }, [files, touched, requiredMin, maxFiles, labels]);
 
   const combinedError = externalError ?? dropError ?? validationError;
-  const dropzoneRootClass = `!border-dashed !border-[1.5px] !rounded-xl !transition-colors ${
+  const dropzoneRootClass = [
+    "!border-dashed !border-[1.5px] !rounded-xl !transition-colors",
     disabled &&
-    "!bg-gray-100 !border-gray-200 !cursor-not-allowed dark:!bg-gray-800 dark:!border-gray-700"
-  } ${combinedError ? "!border-red-400" : ""}`;
+      "!bg-gray-100 !border-gray-200 !cursor-not-allowed dark:!bg-gray-800 dark:!border-gray-700",
+    combinedError && "!border-red-400",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const runUpload = useCallback(
     async (id: string, file: File) => {
@@ -447,7 +421,6 @@ function FileUploadInner<TResult = unknown>(
       }
       try {
         const result = await uploadHandler(file);
-        // Create preview only after successful upload
         const preview =
           showThumbnails && file.type.startsWith("image/")
             ? URL.createObjectURL(file)
@@ -455,14 +428,7 @@ function FileUploadInner<TResult = unknown>(
         updateFiles((prev) =>
           prev.map((it) =>
             it.id === id
-              ? {
-                  ...it,
-                  uploading: false,
-                  result,
-                  error: undefined,
-                  preview,
-                  file: undefined as any,
-                }
+              ? { ...it, uploading: false, error: undefined, result, preview }
               : it,
           ),
         );
@@ -475,7 +441,8 @@ function FileUploadInner<TResult = unknown>(
                   ...it,
                   uploading: false,
                   error: labels.errorUploadFailed,
-                  // Keep file on error so user can retry
+                  result: undefined,
+                  // keep `file` so the user can retry
                 }
               : it,
           ),
@@ -490,8 +457,9 @@ function FileUploadInner<TResult = unknown>(
       const id = crypto.randomUUID();
       const customError = validate?.(file) ?? undefined;
 
-      // If no uploadHandler, create preview immediately for images
-      // If uploadHandler exists, preview will be created after successful upload
+      // If no uploadHandler, create the preview immediately.
+      // If uploadHandler exists, the preview is created only after a successful upload
+      // (see runUpload) so we never show a thumbnail for a file that failed to save.
       const preview =
         !uploadHandler && showThumbnails && file.type.startsWith("image/")
           ? URL.createObjectURL(file)
@@ -505,10 +473,7 @@ function FileUploadInner<TResult = unknown>(
         error: customError ?? undefined,
       };
 
-      updateFiles((prev) => {
-        const base = multiple ? prev : [];
-        return [...base, entry];
-      });
+      updateFiles((prev) => (multiple ? [...prev, entry] : [entry]));
 
       if (!customError && uploadHandler) runUpload(id, file);
     },
@@ -533,27 +498,27 @@ function FileUploadInner<TResult = unknown>(
 
   const handleReject = (rejections: FileRejection[]) => {
     setTouched(true);
-    rejections.forEach(({ file, errors: fileErrors }) => {
-      const isTooLarge = fileErrors.some((e) => e.code === "file-too-large");
-      const isInvalidType = fileErrors.some(
-        (e) => e.code === "file-invalid-type",
-      );
-      const message = isTooLarge
-        ? labels.errorTooLarge(maxSizeMB)
-        : isInvalidType
-          ? labels.errorInvalidType
-          : (fileErrors[0]?.message ?? labels.errorUploadFailed);
+    updateFiles((prev) => [
+      ...prev,
+      ...rejections.map(({ file, errors: fileErrors }) => {
+        const isTooLarge = fileErrors.some((e) => e.code === "file-too-large");
+        const isInvalidType = fileErrors.some(
+          (e) => e.code === "file-invalid-type",
+        );
+        const message = isTooLarge
+          ? labels.errorTooLarge(maxSizeMB)
+          : isInvalidType
+            ? labels.errorInvalidType
+            : (fileErrors[0]?.message ?? labels.errorUploadFailed);
 
-      updateFiles((prev) => [
-        ...prev,
-        {
+        return {
           id: crypto.randomUUID(),
           file,
           uploading: false,
           error: message,
-        },
-      ]);
-    });
+        } as UploadedFile<TResult>;
+      }),
+    ]);
   };
 
   const removeFile = (id: string) => {
@@ -565,7 +530,7 @@ function FileUploadInner<TResult = unknown>(
 
   const retryFile = (id: string) => {
     const target = files.find((it) => it.id === id);
-    if (!target || !target.file) return;
+    if (!target?.file) return;
     updateFiles((prev) =>
       prev.map((it) =>
         it.id === id ? { ...it, uploading: true, error: undefined } : it,
@@ -574,29 +539,29 @@ function FileUploadInner<TResult = unknown>(
     runUpload(id, target.file);
   };
 
+  // Revoke any remaining preview URLs on unmount only (ref keeps this callback stable
+  // and avoids re-registering the cleanup effect on every files change).
   useEffect(() => {
     return () => {
-      files.forEach((f) => {
+      filesRef.current.forEach((f) => {
         if (f.preview) URL.revokeObjectURL(f.preview);
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // keep a real file input's FileList in sync so a plain (non-AJAX) <form> submit
-  // carries the raw files too — only relevant when syncNativeInput is enabled
+  // Keep a real file input's FileList in sync so a plain (non-AJAX) <form> submit
+  // carries the raw files too — only relevant when syncNativeInput is enabled.
   useEffect(() => {
     if (!syncNativeInput || !nativeInputRef.current) return;
     try {
       const dataTransfer = new DataTransfer();
       files
-        .filter((f) => !f.error && f.file)
+        .filter((f) => getFileStatus(f) === "done" && f.file)
         .forEach((f) => dataTransfer.items.add(f.file));
       nativeInputRef.current.files = dataTransfer.files;
     } catch (err) {
       console.error("FileUpload: failed to sync native file input", err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files, syncNativeInput]);
 
   useImperativeHandle(ref, () => ({
@@ -608,18 +573,24 @@ function FileUploadInner<TResult = unknown>(
     getFiles: () => files,
     validate: () => {
       setTouched(true);
-      const settledCount = files.filter((f) => !f.error).length;
-      if (requiredMin > 0 && settledCount < requiredMin) return false;
       if (maxFiles && files.length > maxFiles) return false;
       if (files.some((f) => f.error)) return false;
+      const settledCount = files.filter(
+        (f) => getFileStatus(f) === "done",
+      ).length;
+      if (requiredMin > 0 && settledCount < requiredMin) return false;
       return true;
     },
     getFormData: (fieldName = name ?? "files") =>
       filesToFormData(files, { fieldName }),
   }));
 
+  const canAddMore = multiple && (!maxFiles || files.length < maxFiles);
+  const dropzoneDisabled =
+    disabled || (!multiple && files.some((f) => !f.error));
+
   return (
-    <div dir={dir} className={`font-sans p-4 ${className}`}>
+    <div className={`font-sans p-4 ${className}`}>
       {syncNativeInput ? (
         <input
           ref={nativeInputRef}
@@ -643,16 +614,13 @@ function FileUploadInner<TResult = unknown>(
         onReject={handleReject}
         maxSize={maxSize}
         multiple={multiple}
-        disabled={disabled || (!multiple && files.some((f) => !f.error))}
+        disabled={dropzoneDisabled}
         accept={accept}
-        classNames={{
-          root: dropzoneRootClass,
-          inner: "!pointer-events-none",
-        }}
+        classNames={{ root: dropzoneRootClass, inner: "!pointer-events-none" }}
       >
         <div className="flex flex-col items-center justify-center text-center py-8 px-4">
-          <p className={`text-base font-medium mb-1`}>{labels.title}</p>
-          <p className={`text-sm leading-relaxed mb-5`}>
+          <p className="text-base font-medium mb-1">{labels.title}</p>
+          <p className="text-sm leading-relaxed mb-5">
             {labels.subtitle(maxSizeMB, acceptedLabel)}
           </p>
           <Button
@@ -675,93 +643,22 @@ function FileUploadInner<TResult = unknown>(
       {files.length > 0 && (
         <div className="mt-3 flex flex-col gap-2.5">
           {files.map((item) => (
-            <div
+            <FileRow
               key={item.id}
-              className={`flex items-center justify-between gap-3 border rounded-xl px-3.5 py-2.5 ${
-                item.error ? "border-red-300" : "border-border-color"
-              }`}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                {item.preview ? (
-                  <img
-                    src={item.preview}
-                    alt={item.file?.name || trans("fileUpload.uploadedFile")}
-                    className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
-                  />
-                ) : (
-                  <div
-                    className={`w-12 h-12 rounded-lg border border-border-color flex items-center justify-center shrink-0`}
-                  >
-                    {getFileIcon(item.file?.type)}
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <p className={`text-sm font-medium truncate`}>
-                    {item.file?.name || trans("fileUpload.uploadedFile")}
-                  </p>
-                  {item.file && (
-                    <p className={`text-xs mt-0.5`}>
-                      {trans("fileUpload.sizeInKb", {
-                        size: (item.file.size / 1024).toFixed(1),
-                      })}
-                    </p>
-                  )}
-                  {item.error && (
-                    <p className="text-xs text-red-500 mt-0.5">{item.error}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5 shrink-0">
-                {item.error ? (
-                  <button
-                    type="button"
-                    onClick={() => retryFile(item.id)}
-                    className="text-xs text-red-500 hover:underline cursor-pointer"
-                  >
-                    {labels.retryLabel}
-                  </button>
-                ) : item.uploading ? (
-                  <Loader size="sm" className="text-primary-600" />
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                      <path
-                        d="M2 6l3 3 5-5"
-                        stroke="#fff"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                )}
-                <button
-                  type="button"
-                  onClick={() => removeFile(item.id)}
-                  disabled={disabled}
-                  className={`cursor-pointer p-1 rounded-md transition-colors`}
-                  aria-label={labels.removeAria}
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 2l10 10M12 2L2 12"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+              item={item}
+              labels={labels}
+              disabled={disabled}
+              onRetry={() => retryFile(item.id)}
+              onRemove={() => removeFile(item.id)}
+            />
           ))}
 
-          {multiple && (!maxFiles || files.length < maxFiles) && (
+          {canAddMore && (
             <button
               type="button"
               onClick={() => openRef.current?.()}
               disabled={disabled}
-              className={`mt-1 cursor-pointer self-start flex items-center gap-1.5 text-sm border border-border-color px-4 py-1.5 rounded-lg transition-colors`}
+              className="mt-1 cursor-pointer self-start flex items-center gap-1.5 text-sm border border-border-color px-4 py-1.5 rounded-lg transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
@@ -776,6 +673,107 @@ function FileUploadInner<TResult = unknown>(
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Row subcomponent                                                   */
+/* ------------------------------------------------------------------ */
+
+interface FileRowProps<TResult> {
+  item: UploadedFile<TResult>;
+  labels: FileUploadLabels;
+  disabled: boolean;
+  onRetry: () => void;
+  onRemove: () => void;
+}
+
+function FileRow<TResult>({
+  item,
+  labels,
+  disabled,
+  onRetry,
+  onRemove,
+}: FileRowProps<TResult>) {
+  const status = getFileStatus(item);
+
+  return (
+    <div
+      className={`flex items-center justify-between gap-3 border rounded-xl px-3.5 py-2.5 ${
+        status === "error" ? "border-red-300" : "border-border-color"
+      }`}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        {item.preview ? (
+          <img
+            src={item.preview}
+            alt={item.file?.name || labels.uploadedFile}
+            className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-lg border border-border-color flex items-center justify-center shrink-0">
+            {getFileIcon(item.file?.type)}
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="text-sm font-medium truncate">
+            {item.file?.name || labels.uploadedFile}
+          </p>
+          {item.file && (
+            <p className="text-xs mt-0.5">
+              {labels.sizeInKb((item.file.size / 1024).toFixed(1))}
+            </p>
+          )}
+          {item.error && (
+            <p className="text-xs text-red-500 mt-0.5">{item.error}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2.5 shrink-0">
+        {status === "error" && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="text-xs text-red-500 hover:underline cursor-pointer"
+          >
+            {labels.retryLabel}
+          </button>
+        )}
+        {status === "uploading" && (
+          <Loader size="sm" className="text-primary-600" />
+        )}
+        {status === "done" && (
+          <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path
+                d="M2 6l3 3 5-5"
+                stroke="#fff"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onRemove}
+          disabled={disabled}
+          className="cursor-pointer p-1 rounded-md transition-colors"
+          aria-label={labels.removeAria}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M2 2l10 10M12 2L2 12"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

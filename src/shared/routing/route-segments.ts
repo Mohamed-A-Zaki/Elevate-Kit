@@ -10,9 +10,9 @@ const routeSegment = (path: string) => path.replace(/^\//, "");
  * definitions. Nested objects (e.g. `auth`) are walked recursively.
  */
 type RouteSegmentsOf<T> = {
-  [K in keyof T as T[K] extends (...args: never[]) => unknown
-    ? never
-    : K]: T[K] extends string
+  [
+    K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K
+  ]: T[K] extends string
     ? string
     : T[K] extends Record<string, unknown>
       ? RouteSegmentsOf<T[K]>

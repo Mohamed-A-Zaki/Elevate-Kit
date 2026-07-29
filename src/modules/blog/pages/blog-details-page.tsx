@@ -3,7 +3,7 @@ import { trans } from "@/shared/utils/trans";
 export default function BlogDetailsPage() {
   return (
     <>
-      <div className="text-3xl my-5">{trans("common.blogDetailsPage")}</div>
+      <div className="my-5 text-3xl">{trans("common.blogDetailsPage")}</div>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import Providers from "@/app/providers";
+import Providers from "@/shared/providers";
 import AppRoutes from "@/shared/routes/app-routes";
 import { Notifications } from "@mantine/notifications";
 

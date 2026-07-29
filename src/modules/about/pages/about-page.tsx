@@ -9,7 +9,7 @@ export default function AboutPage() {
         description="Best deals every day."
         keywords={["electronics", "deals", "shop"]}
       />
-      <div className="text-3xl my-5">{trans("common.aboutPage")}</div>
+      <div className="my-5 text-3xl">{trans("common.aboutPage")}</div>
     </>
   );
 }

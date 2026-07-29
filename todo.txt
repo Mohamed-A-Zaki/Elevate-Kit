@@ -1,0 +1,7 @@
+1- study react-atom
+2- study open / close modal with fetch data
+3- refactor localization folder
+4- study tanstack query
+5- test template on production
+6- review my packages (cache and query-string)
+7- study mongez-cache and mongez-query-string

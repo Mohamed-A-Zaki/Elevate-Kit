@@ -6,7 +6,7 @@ import { Link } from "react-router";
 export default function BlogsPage() {
   return (
     <>
-      <div className="text-3xl my-5">{trans("common.blogsPage")}</div>
+      <div className="my-5 text-3xl">{trans("common.blogsPage")}</div>
 
       <Button
         component={Link}

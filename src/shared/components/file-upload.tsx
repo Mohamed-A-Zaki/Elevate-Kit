@@ -590,7 +590,7 @@ function FileUploadInner<TResult = unknown>(
     disabled || (!multiple && files.some((f) => !f.error));
 
   return (
-    <div className={`font-sans p-4 ${className}`}>
+    <div className={`p-4 font-sans ${className}`}>
       {syncNativeInput ? (
         <input
           ref={nativeInputRef}
@@ -618,9 +618,9 @@ function FileUploadInner<TResult = unknown>(
         accept={accept}
         classNames={{ root: dropzoneRootClass, inner: "!pointer-events-none" }}
       >
-        <div className="flex flex-col items-center justify-center text-center py-8 px-4">
-          <p className="text-base font-medium mb-1">{labels.title}</p>
-          <p className="text-sm leading-relaxed mb-5">
+        <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+          <p className="mb-1 text-base font-medium">{labels.title}</p>
+          <p className="mb-5 text-sm leading-relaxed">
             {labels.subtitle(maxSizeMB, acceptedLabel)}
           </p>
           <Button
@@ -637,7 +637,7 @@ function FileUploadInner<TResult = unknown>(
       </Dropzone>
 
       {combinedError && (
-        <p className="text-xs text-red-500 mt-2">{combinedError}</p>
+        <p className="mt-2 text-xs text-red-500">{combinedError}</p>
       )}
 
       {files.length > 0 && (
@@ -658,7 +658,7 @@ function FileUploadInner<TResult = unknown>(
               type="button"
               onClick={() => openRef.current?.()}
               disabled={disabled}
-              className="mt-1 cursor-pointer self-start flex items-center gap-1.5 text-sm border border-border-color px-4 py-1.5 rounded-lg transition-colors"
+              className="border-border-color mt-1 flex cursor-pointer items-center gap-1.5 self-start rounded-lg border px-4 py-1.5 text-sm transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
@@ -700,43 +700,43 @@ function FileRow<TResult>({
 
   return (
     <div
-      className={`flex items-center justify-between gap-3 border rounded-xl px-3.5 py-2.5 ${
+      className={`flex items-center justify-between gap-3 rounded-xl border px-3.5 py-2.5 ${
         status === "error" ? "border-red-300" : "border-border-color"
       }`}
     >
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex min-w-0 items-center gap-3">
         {item.preview ? (
           <img
             src={item.preview}
             alt={item.file?.name || labels.uploadedFile}
-            className="w-12 h-12 rounded-lg object-cover border border-border-color shrink-0"
+            className="border-border-color h-12 w-12 shrink-0 rounded-lg border object-cover"
           />
         ) : (
-          <div className="w-12 h-12 rounded-lg border border-border-color flex items-center justify-center shrink-0">
+          <div className="border-border-color flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border">
             {getFileIcon(item.file?.type)}
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-sm font-medium truncate">
+          <p className="truncate text-sm font-medium">
             {item.file?.name || labels.uploadedFile}
           </p>
           {item.file && (
-            <p className="text-xs mt-0.5">
+            <p className="mt-0.5 text-xs">
               {labels.sizeInKb((item.file.size / 1024).toFixed(1))}
             </p>
           )}
           {item.error && (
-            <p className="text-xs text-red-500 mt-0.5">{item.error}</p>
+            <p className="mt-0.5 text-xs text-red-500">{item.error}</p>
           )}
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5 shrink-0">
+      <div className="flex shrink-0 items-center gap-2.5">
         {status === "error" && (
           <button
             type="button"
             onClick={onRetry}
-            className="text-xs text-red-500 hover:underline cursor-pointer"
+            className="cursor-pointer text-xs text-red-500 hover:underline"
           >
             {labels.retryLabel}
           </button>
@@ -745,7 +745,7 @@ function FileRow<TResult>({
           <Loader size="sm" className="text-primary-600" />
         )}
         {status === "done" && (
-          <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
+          <div className="bg-primary-600 flex h-5 w-5 items-center justify-center rounded-full">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
               <path
                 d="M2 6l3 3 5-5"
@@ -761,7 +761,7 @@ function FileRow<TResult>({
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="cursor-pointer p-1 rounded-md transition-colors"
+          className="cursor-pointer rounded-md p-1 transition-colors"
           aria-label={labels.removeAria}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

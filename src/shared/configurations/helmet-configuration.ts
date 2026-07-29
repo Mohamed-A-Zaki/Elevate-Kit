@@ -10,5 +10,7 @@ setHelmetConfigurations({
   // translation
   translatable: true,
   translateAppName: true,
-  translationFunction: (key: string) => trans(`helmet.${key}`),
+  translationFunction: (key: string) => {
+    return trans(`helmet.${key}`);
+  },
 });

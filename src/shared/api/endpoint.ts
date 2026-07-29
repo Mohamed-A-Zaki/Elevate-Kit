@@ -6,7 +6,7 @@ import {
 } from "@/shared/configurations";
 import type { LocaleCode } from "@/shared/types/global";
 import axios, { type AxiosResponse } from "axios";
-import { cache } from "smart-cache-ts";
+import { cache } from "@/shared/packages/cache";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,

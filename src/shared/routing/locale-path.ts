@@ -4,8 +4,8 @@ import {
   ENABLE_LOCALE_ROUTES,
   LOCALE_CODES,
 } from "@/shared/configurations";
+import { cache } from "@/shared/packages/cache";
 import type { LocaleCode } from "@/shared/types/global";
-import { cache } from "smart-cache-ts";
 import { URLS } from "./urls";
 
 export function isValidLocale(

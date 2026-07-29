@@ -1,36 +1,44 @@
-import { arTranslations } from "./ar";
-import { enTranslations } from "./en";
-import { frTranslations } from "./fr";
-
 import { LOCALES } from "@/shared/configurations";
-import type { LocaleCode, Translation } from "@/shared/types/global";
+import type { LocaleCode } from "@/shared/types/global";
+import {
+  getTranslationsForLocale,
+  type ResolvedTranslations,
+} from "./translations";
 
-export const languages = [
+interface Language {
+  code: LocaleCode;
+  label: string;
+  dir: "ltr" | "rtl";
+  translations: ResolvedTranslations;
+}
+
+export const languages: readonly Language[] = [
   {
     code: LOCALES.EN,
     label: "English",
     dir: "ltr",
-    translations: enTranslations,
+    translations: getTranslationsForLocale(LOCALES.EN),
   },
   {
     code: LOCALES.AR,
     label: "العربية",
     dir: "rtl",
-    translations: arTranslations,
+    translations: getTranslationsForLocale(LOCALES.AR),
   },
   {
     code: LOCALES.FR,
     label: "Français",
     dir: "ltr",
-    translations: frTranslations,
+    translations: getTranslationsForLocale(LOCALES.FR),
   },
 ] as const;
 
-// Helper map for i18n resources
-export const resources = languages.reduce(
+export const resources = languages.reduce<
+  Record<LocaleCode, { translation: ResolvedTranslations }>
+>(
   (acc, lang) => {
     acc[lang.code] = { translation: lang.translations };
     return acc;
   },
-  {} as Record<LocaleCode, { translation: Translation }>,
+  {} as Record<LocaleCode, { translation: ResolvedTranslations }>,
 );

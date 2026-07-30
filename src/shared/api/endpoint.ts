@@ -4,9 +4,9 @@ import {
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
 } from "@/shared/configurations";
+import { cache } from "@/shared/packages/cache";
 import type { LocaleCode } from "@/shared/types/global";
 import axios, { type AxiosResponse } from "axios";
-import { cache } from "@/shared/packages/cache";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,

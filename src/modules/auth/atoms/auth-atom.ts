@@ -3,8 +3,8 @@ import type {
   RegisterFormData,
   User,
 } from "@/modules/auth/types/auth";
-import { atom } from "@mongez/react-atom";
 import { cache } from "@/shared/packages/cache";
+import { atom } from "@mongez/react-atom";
 import loginService from "../services/login.service";
 import logoutService from "../services/logout.service";
 import registerService from "../services/register.service";

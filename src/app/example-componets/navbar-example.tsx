@@ -7,7 +7,7 @@ import { Link } from "react-router";
 
 export default function NavbarExample() {
   return (
-    <div className="border-border-color m-5 flex items-center justify-between rounded-md border p-3">
+    <div className="border-border-color flex items-center justify-between rounded-md border p-3">
       <div className="flex gap-2">
         <Button component={Link} to={preferredLocalePath(URLS.home)}>
           {trans("common.home")}

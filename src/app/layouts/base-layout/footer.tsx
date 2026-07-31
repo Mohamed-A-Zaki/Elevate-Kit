@@ -1,3 +1,7 @@
 export default function Footer() {
-  return <></>;
+  return (
+    <footer className="border-border-color bg-gray-color rounded-md border p-3 text-center">
+      footer
+    </footer>
+  );
 }

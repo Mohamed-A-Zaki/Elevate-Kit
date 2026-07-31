@@ -1,4 +1,4 @@
-import { Button, Loader } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { Dropzone, type FileRejection, MIME_TYPES } from "@mantine/dropzone";
 import {
   forwardRef,
@@ -27,22 +27,18 @@ import { trans } from "../utils/trans";
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export interface UploadedFile<TResult = unknown> {
+export interface UploadedFile {
   id: string;
   file: File;
-  uploading: boolean;
-  /** per-file error, e.g. "too large", "type not allowed", upload failed... */
+  /** per-file error, e.g. "too large", "type not allowed"... */
   error?: string;
   preview?: string;
-  /** whatever your uploadHandler resolves with (server url, file id, etc.) */
-  result?: TResult;
 }
 
-type FileStatus = "error" | "uploading" | "done";
+type FileStatus = "error" | "done";
 
-function getFileStatus(item: UploadedFile<unknown>): FileStatus {
+function getFileStatus(item: UploadedFile): FileStatus {
   if (item.error) return "error";
-  if (item.uploading) return "uploading";
   return "done";
 }
 
@@ -52,12 +48,10 @@ export interface FileUploadLabels {
   browseButton: string;
   addMoreButton: string;
   removeAria: string;
-  retryLabel: string;
   errorTooLarge: (maxSizeMB: number) => string;
   errorInvalidType: string;
   errorMaxFiles: (max: number) => string;
   errorRequired: string;
-  errorUploadFailed: string;
   /** shown when file(s) were added but all of them have errors — distinct from errorRequired */
   errorFilesInvalid: string;
   uploadedFile: string;
@@ -92,13 +86,11 @@ function buildLabels(overrides?: Partial<FileUploadLabels>): FileUploadLabels {
     browseButton: trans("fileUpload.browseButton"),
     addMoreButton: trans("fileUpload.addMoreButton"),
     removeAria: trans("fileUpload.removeAria"),
-    retryLabel: trans("fileUpload.retryLabel"),
     errorTooLarge: (maxSizeMB) =>
       trans("fileUpload.errorTooLarge", { maxSizeMB }),
     errorInvalidType: trans("fileUpload.errorInvalidType"),
     errorMaxFiles: (max) => trans("fileUpload.errorMaxFiles", { max }),
     errorRequired: trans("fileUpload.errorRequired"),
-    errorUploadFailed: trans("fileUpload.errorUploadFailed"),
     errorFilesInvalid: trans("fileUpload.errorFilesInvalid"),
     uploadedFile: trans("fileUpload.uploadedFile"),
     sizeInKb: (size) => trans("fileUpload.sizeInKb", { size }),
@@ -148,24 +140,19 @@ export type AcceptedMimeType =
   | "application/zip"
   | (string & {});
 
-export interface FileUploadProps<TResult = unknown> {
+export interface FileUploadProps {
   /** Field name, useful when wiring into plain `<form>` submits. */
   name?: string;
 
   /** Controlled list of files — pass together with `onChange` to drive from parent/RHF state. */
-  value?: UploadedFile<TResult>[];
+  value?: UploadedFile[];
   /** Initial files when used uncontrolled (no `value` passed). */
-  defaultValue?: UploadedFile<TResult>[];
-  /** Fires on every internal change: add, remove, upload progress, upload result. */
-  onChange?: (files: UploadedFile<TResult>[]) => void;
-  /** Convenience callback — fires only with the successfully uploaded/added, error-free raw `File[]`. */
-  onFilesChange?: (files: File[], allFiles: UploadedFile<TResult>[]) => void;
+  defaultValue?: UploadedFile[];
+  /** Fires on every internal change: add, remove. */
+  onChange?: (files: UploadedFile[]) => void;
+  /** Convenience callback — fires only with the current, error-free raw `File[]`. */
+  onFilesChange?: (files: File[], allFiles: UploadedFile[]) => void;
 
-  /**
-   * Async uploader that receives the raw `File`, resolve with
-   * anything you want stored as `result` (server URL, file id, etc).
-   */
-  uploadHandler?: (file: File) => Promise<TResult>;
   /** Custom sync validation per file. Return an error string to reject the file, or null/undefined to accept it. */
   validate?: (file: File) => string | null | undefined;
 
@@ -187,7 +174,7 @@ export interface FileUploadProps<TResult = unknown> {
   maxSizeMB?: number;
   /** Max total number of files allowed. Omit for unlimited. */
   maxFiles?: number;
-  /** Min number of successfully-added files required. Defaults to 1 when `required` is true. */
+  /** Min number of valid files required. Defaults to 1 when `required` is true. */
   minFiles?: number;
   /** Allow selecting/dropping more than one file at a time.
    * @default true */
@@ -211,13 +198,13 @@ export interface FileUploadProps<TResult = unknown> {
   className?: string;
 }
 
-export interface FileUploadRef<TResult = unknown> {
+export interface FileUploadRef {
   /** Programmatically opens the native file picker. */
   openFileDialog: () => void;
   /** Removes all files and revokes their preview URLs. */
   clear: () => void;
-  /** Returns the current file list (with status/error/result per file). */
-  getFiles: () => UploadedFile<TResult>[];
+  /** Returns the current file list (with status/error per file). */
+  getFiles: () => UploadedFile[];
   /** Runs required/minFiles/maxFiles/per-file-error checks, returns true if valid. Also marks the field as touched so errors render. */
   validate: () => boolean;
   /**
@@ -306,14 +293,13 @@ export function createFileListValidator(
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-function FileUploadInner<TResult = unknown>(
+function FileUploadInner(
   {
     name,
     value,
     defaultValue,
     onChange,
     onFilesChange,
-    uploadHandler,
     validate,
     syncNativeInput = false,
     accept = [MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.pdf, "text/csv"],
@@ -327,8 +313,8 @@ function FileUploadInner<TResult = unknown>(
     showThumbnails = true,
     labels: labelsOverride,
     className = "",
-  }: FileUploadProps<TResult>,
-  ref: React.Ref<FileUploadRef<TResult>>,
+  }: FileUploadProps,
+  ref: React.Ref<FileUploadRef>,
 ) {
   const labels = useMemo(() => buildLabels(labelsOverride), [labelsOverride]);
 
@@ -339,12 +325,10 @@ function FileUploadInner<TResult = unknown>(
   const nativeInputRef = useRef<HTMLInputElement>(null);
   const isControlled = value !== undefined;
 
-  const [internalFiles, setInternalFiles] = useState<UploadedFile<TResult>[]>(
+  const [internalFiles, setInternalFiles] = useState<UploadedFile[]>(
     defaultValue ?? [],
   );
-  const files = isControlled
-    ? (value as UploadedFile<TResult>[])
-    : internalFiles;
+  const files = isControlled ? (value as UploadedFile[]) : internalFiles;
 
   const [touched, setTouched] = useState(false);
   const [dropError, setDropError] = useState<string | null>(null);
@@ -355,17 +339,16 @@ function FileUploadInner<TResult = unknown>(
   );
 
   // Always holds the latest files, updated synchronously. Needed because two updateFiles
-  // calls can fire back-to-back in the same tick (e.g. "add file" then "mark done" when
-  // there's no real async delay) — before React has re-rendered with the first update.
-  // Reading `value`/`internalFiles` directly in that second call would see stale data and
-  // silently drop the first change.
-  const filesRef = useRef<UploadedFile<TResult>[]>(files);
+  // calls can fire back-to-back in the same tick — before React has re-rendered with the
+  // first update. Reading `value`/`internalFiles` directly in that second call would see
+  // stale data and silently drop the first change.
+  const filesRef = useRef<UploadedFile[]>(files);
   useEffect(() => {
     filesRef.current = files;
   }, [files]);
 
   const updateFiles = useCallback(
-    (updater: (prev: UploadedFile<TResult>[]) => UploadedFile<TResult>[]) => {
+    (updater: (prev: UploadedFile[]) => UploadedFile[]) => {
       const next = updater(filesRef.current);
       filesRef.current = next;
       if (!isControlled) setInternalFiles(next);
@@ -394,8 +377,8 @@ function FileUploadInner<TResult = unknown>(
       (f) => getFileStatus(f) === "done",
     ).length;
     if (requiredMin > 0 && settledCount < requiredMin) {
-      // a file WAS provided but it failed validation/upload — say so instead of
-      // claiming the field is "required", which is confusing when a file is right there.
+      // a file WAS provided but it failed validation — say so instead of claiming the
+      // field is "required", which is confusing when a file is right there.
       return labels.errorFilesInvalid;
     }
     return null;
@@ -411,73 +394,26 @@ function FileUploadInner<TResult = unknown>(
     .filter(Boolean)
     .join(" ");
 
-  const runUpload = useCallback(
-    async (id: string, file: File) => {
-      if (!uploadHandler) {
-        updateFiles((prev) =>
-          prev.map((it) => (it.id === id ? { ...it, uploading: false } : it)),
-        );
-        return;
-      }
-      try {
-        const result = await uploadHandler(file);
-        const preview =
-          showThumbnails && file.type.startsWith("image/")
-            ? URL.createObjectURL(file)
-            : undefined;
-        updateFiles((prev) =>
-          prev.map((it) =>
-            it.id === id
-              ? { ...it, uploading: false, error: undefined, result, preview }
-              : it,
-          ),
-        );
-      } catch (err) {
-        console.error(err);
-        updateFiles((prev) =>
-          prev.map((it) =>
-            it.id === id
-              ? {
-                  ...it,
-                  uploading: false,
-                  error: labels.errorUploadFailed,
-                  result: undefined,
-                  // keep `file` so the user can retry
-                }
-              : it,
-          ),
-        );
-      }
-    },
-    [uploadHandler, updateFiles, labels, showThumbnails],
-  );
-
   const addFile = useCallback(
     (file: File) => {
       const id = crypto.randomUUID();
       const customError = validate?.(file) ?? undefined;
 
-      // If no uploadHandler, create the preview immediately.
-      // If uploadHandler exists, the preview is created only after a successful upload
-      // (see runUpload) so we never show a thumbnail for a file that failed to save.
       const preview =
-        !uploadHandler && showThumbnails && file.type.startsWith("image/")
+        showThumbnails && file.type.startsWith("image/")
           ? URL.createObjectURL(file)
           : undefined;
 
-      const entry: UploadedFile<TResult> = {
+      const entry: UploadedFile = {
         id,
         file,
-        uploading: !customError && !!uploadHandler,
         preview,
         error: customError ?? undefined,
       };
 
       updateFiles((prev) => (multiple ? [...prev, entry] : [entry]));
-
-      if (!customError && uploadHandler) runUpload(id, file);
     },
-    [validate, showThumbnails, multiple, updateFiles, runUpload, uploadHandler],
+    [validate, showThumbnails, multiple, updateFiles],
   );
 
   const handleDrop = (accepted: File[]) => {
@@ -509,14 +445,13 @@ function FileUploadInner<TResult = unknown>(
           ? labels.errorTooLarge(maxSizeMB)
           : isInvalidType
             ? labels.errorInvalidType
-            : (fileErrors[0]?.message ?? labels.errorUploadFailed);
+            : (fileErrors[0]?.message ?? labels.errorInvalidType);
 
         return {
           id: crypto.randomUUID(),
           file,
-          uploading: false,
           error: message,
-        } as UploadedFile<TResult>;
+        } as UploadedFile;
       }),
     ]);
   };
@@ -526,17 +461,6 @@ function FileUploadInner<TResult = unknown>(
     const target = files.find((it) => it.id === id);
     if (target?.preview) URL.revokeObjectURL(target.preview);
     updateFiles((prev) => prev.filter((it) => it.id !== id));
-  };
-
-  const retryFile = (id: string) => {
-    const target = files.find((it) => it.id === id);
-    if (!target?.file) return;
-    updateFiles((prev) =>
-      prev.map((it) =>
-        it.id === id ? { ...it, uploading: true, error: undefined } : it,
-      ),
-    );
-    runUpload(id, target.file);
   };
 
   // Revoke any remaining preview URLs on unmount only (ref keeps this callback stable
@@ -648,7 +572,6 @@ function FileUploadInner<TResult = unknown>(
               item={item}
               labels={labels}
               disabled={disabled}
-              onRetry={() => retryFile(item.id)}
               onRemove={() => removeFile(item.id)}
             />
           ))}
@@ -681,21 +604,14 @@ function FileUploadInner<TResult = unknown>(
 /*  Row subcomponent                                                   */
 /* ------------------------------------------------------------------ */
 
-interface FileRowProps<TResult> {
-  item: UploadedFile<TResult>;
+interface FileRowProps {
+  item: UploadedFile;
   labels: FileUploadLabels;
   disabled: boolean;
-  onRetry: () => void;
   onRemove: () => void;
 }
 
-function FileRow<TResult>({
-  item,
-  labels,
-  disabled,
-  onRetry,
-  onRemove,
-}: FileRowProps<TResult>) {
+function FileRow({ item, labels, disabled, onRemove }: FileRowProps) {
   const status = getFileStatus(item);
 
   return (
@@ -732,18 +648,6 @@ function FileRow<TResult>({
       </div>
 
       <div className="flex shrink-0 items-center gap-2.5">
-        {status === "error" && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="cursor-pointer text-xs text-red-500 hover:underline"
-          >
-            {labels.retryLabel}
-          </button>
-        )}
-        {status === "uploading" && (
-          <Loader size="sm" className="text-primary-600" />
-        )}
         {status === "done" && (
           <div className="bg-primary-600 flex h-5 w-5 items-center justify-center rounded-full">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
@@ -778,8 +682,8 @@ function FileRow<TResult>({
   );
 }
 
-const FileUpload = forwardRef(FileUploadInner) as <TResult = unknown>(
-  props: FileUploadProps<TResult> & { ref?: React.Ref<FileUploadRef<TResult>> },
+const FileUpload = forwardRef(FileUploadInner) as (
+  props: FileUploadProps & { ref?: React.Ref<FileUploadRef> },
 ) => ReturnType<typeof FileUploadInner>;
 
 export default FileUpload;

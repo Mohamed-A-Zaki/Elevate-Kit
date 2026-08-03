@@ -21,7 +21,7 @@ import {
   FaMusic,
   FaRegFile,
 } from "react-icons/fa6";
-import { trans } from "../utils/trans";
+import { trans } from "../localization/trans";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */

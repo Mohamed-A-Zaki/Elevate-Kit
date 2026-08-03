@@ -1,4 +1,4 @@
-import { trans } from "@/shared/utils/trans";
+import { trans } from "@/shared/localization/trans";
 
 export default function BlogDetailsPage() {
   return (

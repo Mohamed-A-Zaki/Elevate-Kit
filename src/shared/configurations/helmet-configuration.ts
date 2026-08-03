@@ -1,5 +1,5 @@
 import { setHelmetConfigurations } from "@mongez/react-helmet";
-import { trans } from "../utils/trans";
+import { trans } from "../localization/trans";
 
 setHelmetConfigurations({
   // App-name suffix

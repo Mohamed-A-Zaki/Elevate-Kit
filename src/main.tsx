@@ -2,11 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 
+import "@/shared/configurations/helmet-configuration";
 import "@/shared/localization/i18n";
 import "@/shared/styles";
-import App from "./App";
 
-import "@/shared/configurations/helmet-configuration";
+import App from "./App";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

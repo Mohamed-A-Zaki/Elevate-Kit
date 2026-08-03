@@ -4,7 +4,7 @@ import {
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
 } from "@/shared/configurations";
-import { cache } from "@/shared/packages/cache";
+import { cache } from "@/shared/packages/cache/cache";
 import type { LocaleCode } from "@/shared/types/global";
 import axios, { type AxiosResponse } from "axios";
 

@@ -1,4 +1,4 @@
-import { trans } from "@/shared/utils/trans";
+import { trans } from "@/shared/localization/trans";
 import Helmet from "@mongez/react-helmet";
 
 export default function AboutPage() {

@@ -50,8 +50,7 @@
   --color-black-color: var(--black-color);
 }
 
-/* custom styles */
-
+/* container styles */
 @utility container {
   margin-inline: auto;
   padding-inline: 0.75rem;
@@ -76,3 +75,5 @@
     max-width: 1320px;
   }
 }
+
+/* custom styles */

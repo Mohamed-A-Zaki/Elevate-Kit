@@ -4,7 +4,7 @@ import { Route } from "react-router";
 
 import AuthLayout from "@/app/layouts/auth-layout";
 import BaseLayout from "@/app/layouts/base-layout";
-import PageLoader from "../components/page-loader";
+import PageLoader from "@/shared/components/page-loader";
 
 const ForgetPasswordPage = lazy(
   () => import("@/modules/auth/pages/forget-password-page"),

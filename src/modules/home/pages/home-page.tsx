@@ -1,4 +1,3 @@
-import PositionsPage from "@/modules/positions/pages/positions-page";
 import Helmet from "@mongez/react-helmet";
 
 export default function HomePage() {
@@ -9,8 +8,6 @@ export default function HomePage() {
         description="Best deals every day."
         keywords={["electronics", "deals", "shop"]}
       />
-
-      <PositionsPage />
     </>
   );
 }

@@ -1,12 +1,14 @@
 import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useCreatePositionMutation } from "../../positions/services/positions.mutations";
+import { useCreatePosition } from "../../positions/services/positions.mutations";
 import { open_create_position_modal_atom } from "../atoms/open-atoms";
 
 export default function CreatePositionModal() {
   const opened = open_create_position_modal_atom.useOpened();
-  const { mutate, isPending } = useCreatePositionMutation();
+  const { mutate, isPending } = useCreatePosition({
+    invalidate: true,
+  });
 
   const form = useForm({
     initialValues: {

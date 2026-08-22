@@ -2,16 +2,18 @@ import { Button, Group, Loader, Modal, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useEffect } from "react";
-import { useUpdatePositionMutation } from "../../positions/services/positions.mutations";
-import { useSinglePositionQuery } from "../../positions/services/positions.queries";
+import { useUpdatePosition } from "../../positions/services/positions.mutations";
+import { useGetPosition } from "../../positions/services/positions.queries";
 import { open_edit_position_modal_atom } from "../atoms/open-atoms";
 import { selected_position_id_atom } from "../atoms/selected-position-id-atom";
 
 export default function EditPositionModal() {
   const { id } = selected_position_id_atom.useValue();
-  const { data, isPending: getPending } = useSinglePositionQuery(id);
+  const { data, isPending: getPending } = useGetPosition(id);
   const opened = open_edit_position_modal_atom.useOpened();
-  const { mutate, isPending: updatePending } = useUpdatePositionMutation();
+  const { mutate, isPending: updatePending } = useUpdatePosition({
+    invalidate: true,
+  });
 
   const form = useForm({
     initialValues: {

@@ -7,10 +7,49 @@ import {
 } from "./positions.api";
 import { positionsKeys } from "./positions.keys";
 
+interface MutationOptions {
+  invalidate?: boolean;
+}
+
+/**
+ * Hook to create a new position
+ */
+export const useCreatePosition = ({ invalidate }: MutationOptions) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (position: Omit<Position, "id">) => createPosition(position),
+
+    onSuccess: () => {
+      if (invalidate) {
+        queryClient.invalidateQueries({ queryKey: positionsKeys.list() });
+      }
+    },
+  });
+};
+
+/**
+ * Hook to update a position by ID
+ */
+export const useUpdatePosition = ({ invalidate }: MutationOptions) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: UpdatePositionPayload) =>
+      updatePosition(id, data),
+
+    onSuccess: () => {
+      if (invalidate) {
+        queryClient.invalidateQueries({ queryKey: positionsKeys.list() });
+      }
+    },
+  });
+};
+
 /**
  * Hook to delete a position by ID
  */
-export const useDeletePositionMutation = () => {
+export const useDeletePosition = ({ invalidate }: MutationOptions) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -20,56 +59,9 @@ export const useDeletePositionMutation = () => {
     },
 
     onSuccess: () => {
-      /**
-       * Refresh positions list
-       */
-      queryClient.invalidateQueries({
-        queryKey: positionsKeys.list(),
-      });
-    },
-  });
-};
-
-/**
- * Hook to update a position by ID
- */
-export const useUpdatePositionMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, data }: UpdatePositionPayload) => {
-      return updatePosition(id, data);
-    },
-
-    onSuccess: () => {
-      /**
-       * Refresh positions list
-       */
-      queryClient.invalidateQueries({
-        queryKey: positionsKeys.list(),
-      });
-    },
-  });
-};
-
-/**
- * Hook to create a new position
- */
-export const useCreatePositionMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (position: Omit<Position, "id">) => {
-      return createPosition(position);
-    },
-
-    onSuccess: () => {
-      /**
-       * Refresh positions list
-       */
-      queryClient.invalidateQueries({
-        queryKey: positionsKeys.list(),
-      });
+      if (invalidate) {
+        queryClient.invalidateQueries({ queryKey: positionsKeys.list() });
+      }
     },
   });
 };

@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit3 } from "react-icons/fi";
-import { useAllPositionsQuery } from "../../positions/services/positions.queries";
+import { useGetPositions } from "../../positions/services/positions.queries";
 import {
   open_create_position_modal_atom,
   open_delete_position_modal_atom,
@@ -24,7 +24,7 @@ import EditPositionModal from "../components/edit-position-modal";
 export default function PositionsPage() {
   const [activePage, setPage] = useState(1);
 
-  const { data, isPending } = useAllPositionsQuery({
+  const { data, isPending } = useGetPositions({
     pagesize: 12,
     page: activePage - 1,
   });

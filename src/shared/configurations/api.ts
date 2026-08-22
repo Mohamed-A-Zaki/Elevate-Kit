@@ -1,1 +1,1 @@
-export const BASEURL = "https://jsonplaceholder.typicode.com";
+export const BASEURL = "https://geoservices1.syadtech.com/GISAPIDEVV2";

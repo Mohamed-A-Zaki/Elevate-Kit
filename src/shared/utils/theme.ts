@@ -18,7 +18,7 @@ export const theme = createTheme({
     ],
   },
   primaryColor: "primary",
-  defaultRadius: "sm",
+  defaultRadius: "md",
   defaultGradient: {
     from: "orange",
     to: "red",

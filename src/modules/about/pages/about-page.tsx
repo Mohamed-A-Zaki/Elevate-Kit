@@ -5,7 +5,7 @@ export default function AboutPage() {
   return (
     <>
       <Helmet
-        title="aboutPage"
+        title={trans("helmet.aboutPage")}
         description="Best deals every day."
         keywords={["electronics", "deals", "shop"]}
       />

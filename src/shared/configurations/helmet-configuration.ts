@@ -3,7 +3,7 @@ import { trans } from "../localization/trans";
 
 setHelmetConfigurations({
   // App-name suffix
-  appName: trans("app_name" as any),
+  appName: trans("helmet.app_name"),
   appendAppName: true,
   appNameSeparator: " | ",
 
@@ -11,6 +11,6 @@ setHelmetConfigurations({
   translatable: true,
   translateAppName: true,
   translationFunction: (key: string) => {
-    return trans(`helmet.${key}` as any);
+    return trans(key as any);
   },
 });

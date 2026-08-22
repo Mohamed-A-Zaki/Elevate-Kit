@@ -9,7 +9,11 @@ export interface UpdatePositionPayload {
 }
 
 export interface PositionsFilters {
-  id?: string;
-  pagesize?: number;
   page?: number;
+  pagesize?: number;
+}
+
+export interface GetPositionsResponse {
+  results: Position[];
+  totalPages: number;
 }

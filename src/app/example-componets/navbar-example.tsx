@@ -1,6 +1,6 @@
+import { trans } from "@/packages/smart-localization";
 import LocaleSwitcher from "@/shared/components/locale-switcher";
 import ThemeSwitcher from "@/shared/components/theme-switcher";
-import { trans } from "@/shared/localization/trans";
 import { preferredLocalePath, URLS } from "@/shared/routing";
 import { Button } from "@mantine/core";
 import { Link } from "react-router";

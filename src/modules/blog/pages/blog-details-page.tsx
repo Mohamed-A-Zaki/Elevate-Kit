@@ -1,4 +1,4 @@
-import { trans } from "@/shared/localization/trans";
+import { trans } from "@/packages/smart-localization";
 
 export default function BlogDetailsPage() {
   return (

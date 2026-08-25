@@ -1,4 +1,4 @@
-import type { TranslationDict } from "../types";
+import type { TranslationDict } from "@/packages/smart-localization";
 
 export const helmetTranslations = {
   app_name: {

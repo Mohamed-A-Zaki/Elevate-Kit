@@ -1,4 +1,4 @@
-import { trans } from "@/shared/localization/trans";
+import { trans } from "@/packages/smart-localization";
 import { preferredLocalePath } from "@/shared/routing";
 import { Button } from "@mantine/core";
 import { Link } from "react-router";

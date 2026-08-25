@@ -1,9 +1,10 @@
 import { setHelmetConfigurations } from "@mongez/react-helmet";
-import { trans } from "../localization/trans";
+import { trans } from "../../packages/smart-localization";
 
 setHelmetConfigurations({
   // App-name suffix
-  appName: trans("helmet.app_name"),
+  // appName: trans("helmet.app_name"),
+  appName: "helmet.app_name",
   appendAppName: true,
   appNameSeparator: " | ",
 

@@ -1,18 +1,8 @@
+import type { Language } from "@/packages/smart-localization";
 import { LOCALES } from "@/shared/configurations";
-import type { LocaleCode } from "@/shared/types/global";
-import {
-  getTranslationsForLocale,
-  type ResolvedTranslations,
-} from "./translations";
+import { getTranslationsForLocale } from "./translations";
 
-interface Language {
-  code: LocaleCode;
-  label: string;
-  dir: "ltr" | "rtl";
-  translations: ResolvedTranslations;
-}
-
-export const languages: readonly Language[] = [
+export const languages = [
   {
     code: LOCALES.EN,
     label: "English",
@@ -31,14 +21,4 @@ export const languages: readonly Language[] = [
     dir: "ltr",
     translations: getTranslationsForLocale(LOCALES.FR),
   },
-] as const;
-
-export const resources = languages.reduce<
-  Record<LocaleCode, { translation: ResolvedTranslations }>
->(
-  (acc, lang) => {
-    acc[lang.code] = { translation: lang.translations };
-    return acc;
-  },
-  {} as Record<LocaleCode, { translation: ResolvedTranslations }>,
-);
+] as const satisfies readonly Language[];

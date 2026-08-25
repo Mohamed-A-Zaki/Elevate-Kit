@@ -1,9 +1,9 @@
-import type { LocaleCode } from "@/shared/types/global";
 import {
-  isLocaleValue,
+  localization,
   type ResolveLocale,
   type TranslationDict,
-} from "./types";
+} from "@/packages/smart-localization";
+import type { LocaleCode } from "@/shared/types/global";
 
 import { commonTranslations } from "./namespaces/common";
 import { fileUploadTranslations } from "./namespaces/file-upload";
@@ -21,26 +21,8 @@ export type Translations = typeof translations;
 /** The shape of a single locale's resolved translations. */
 export type ResolvedTranslations = ResolveLocale<Translations>;
 
-function resolveTranslationValue<T extends TranslationDict>(
-  node: T,
-  locale: LocaleCode,
-): ResolveLocale<T> {
-  const result = {} as ResolveLocale<T>;
-
-  for (const key of Object.keys(node)) {
-    const value = node[key];
-    const resolved = isLocaleValue(value)
-      ? (value[locale] ?? "")
-      : resolveTranslationValue(value, locale);
-
-    (result as Record<string, unknown>)[key] = resolved;
-  }
-
-  return result;
-}
-
 export function getTranslationsForLocale(
   locale: LocaleCode,
 ): ResolvedTranslations {
-  return resolveTranslationValue(translations, locale);
+  return localization.resolveTranslations(translations, locale);
 }

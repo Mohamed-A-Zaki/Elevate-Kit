@@ -1,4 +1,4 @@
-import { trans } from "@/shared/localization/trans";
+import { trans } from "@/packages/smart-localization";
 import Helmet from "@mongez/react-helmet";
 
 export default function HomePage() {

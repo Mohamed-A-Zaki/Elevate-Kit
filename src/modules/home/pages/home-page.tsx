@@ -9,6 +9,7 @@ export default function HomePage() {
         description="Best deals every day."
         keywords={["electronics", "deals", "shop"]}
       />
+      <div className="my-5 text-3xl">{trans("common.homePage")}</div>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import type { Language } from "@/packages/smart-localization";
-import { LOCALES } from "@/shared/configurations";
+import { LOCALES } from "../config";
 import { getTranslationsForLocale } from "./translations";
 
 export const languages = [

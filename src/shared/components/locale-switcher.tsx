@@ -1,5 +1,4 @@
 import { localeAtom } from "@/shared/atoms/locale-atom";
-import { ENABLE_LOCALE_ROUTES } from "@/shared/configurations";
 import { useResolvedLocale } from "@/shared/hooks/use-current-locale";
 import { languages } from "@/shared/localization/languages";
 import { switchLocalePath } from "@/shared/routing";
@@ -7,6 +6,7 @@ import type { LocaleCode } from "@/shared/types/global";
 import { ActionIcon, Menu } from "@mantine/core";
 import { FaGlobe } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router";
+import { ENABLE_LOCALE_ROUTES } from "../config";
 
 export default function LocaleSwitcher() {
   const localeCode = useResolvedLocale();

@@ -19,7 +19,7 @@ export const useGetPositions = (filters?: PositionsFilters) => {
 export const useGetPosition = (id: number | null) => {
   return useQuery({
     queryKey: positionsKeys.details(id?.toString() ?? ""),
-    queryFn: () => getPosition(id!.toString()),
+    queryFn: () => getPosition(id!),
     enabled: id != null,
   });
 };

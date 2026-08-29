@@ -1,10 +1,17 @@
-export { BASEURL } from "./api";
-export { CACHE_KEYS } from "./cache-keys";
-export { FONTS } from "./fonts";
-export {
-  DEFAULT_LOCALE_CODE,
-  ENABLE_LOCALE_ROUTES,
-  LOCALES,
-  LOCALE_CODES,
-} from "./locales";
-export { DEFAULT_THEME, THEMES } from "./themes";
+import { setHelmetConfigurations } from "@mongez/react-helmet";
+import { trans } from "../../packages/smart-localization";
+
+setHelmetConfigurations({
+  // App-name suffix
+  // appName: trans("helmet.app_name"),
+  appName: "helmet.app_name",
+  appendAppName: true,
+  appNameSeparator: " | ",
+
+  // translation
+  translatable: true,
+  translateAppName: true,
+  translationFunction: (key: string) => {
+    return trans(key as any);
+  },
+});

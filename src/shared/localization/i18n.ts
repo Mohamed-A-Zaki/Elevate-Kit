@@ -1,6 +1,6 @@
-import { cache } from "@/packages/cache";
+import { cache } from "@/packages/smart-cache";
 import { localization } from "@/packages/smart-localization";
-import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "@/shared/configurations";
+import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "../config";
 import { languages } from "./languages";
 
 const i18n = localization.init({

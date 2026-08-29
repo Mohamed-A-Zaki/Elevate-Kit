@@ -1,11 +1,7 @@
 import { authAtom } from "@/modules/auth/atoms/auth-atom";
-import { cache } from "@/packages/cache";
-import {
-  BASEURL,
-  CACHE_KEYS,
-  DEFAULT_LOCALE_CODE,
-} from "@/shared/configurations";
+import { cache } from "@/packages/smart-cache";
 import axios, { type AxiosResponse } from "axios";
+import { BASEURL, CACHE_KEYS, DEFAULT_LOCALE_CODE } from "../config";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,

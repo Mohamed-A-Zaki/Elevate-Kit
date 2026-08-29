@@ -1,4 +1,3 @@
-import { ENABLE_LOCALE_ROUTES } from "@/shared/configurations";
 import {
   isValidLocale,
   preferredLocalePath,
@@ -9,6 +8,7 @@ import { Navigate, Route, Routes, useParams } from "react-router";
 
 import LocaleLayout from "@/shared/layouts/locale-layout";
 import { coreRoutes } from "@/shared/routes/core-routes";
+import { ENABLE_LOCALE_ROUTES } from "../config";
 
 function LocaleNotFoundRedirect() {
   const { locale } = useParams();

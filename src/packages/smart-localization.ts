@@ -36,13 +36,6 @@ export type ResolveLocale<T extends TranslationDict> = {
       : never;
 };
 
-/** Runtime counterpart of the `LocaleValue` branch of `ResolveLocale`. */
-export function isLocaleValue(
-  value: LocaleValue | TranslationDict,
-): value is LocaleValue {
-  return Object.values(value).every((entry) => typeof entry === "string");
-}
-
 export interface Language {
   code: string;
   label?: string;
@@ -71,6 +64,18 @@ export interface LocalizationOptions {
   i18nextOptions?: InitOptions;
 }
 
+interface ResolvedLocalizationOptions {
+  languages: readonly Language[];
+  defaultLocale: string;
+  cacheKey: string | null;
+  namespace: string;
+  storage: LocalizationStorage;
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
 const defaultStorage: LocalizationStorage = {
   get(key) {
     if (typeof window === "undefined") return null;
@@ -90,16 +95,29 @@ const defaultStorage: LocalizationStorage = {
   },
 };
 
-interface ResolvedLocalizationOptions {
-  languages: readonly Language[];
-  defaultLocale: string;
-  cacheKey: string | null;
-  namespace: string;
-  storage: LocalizationStorage;
+/** Runtime counterpart of the `LocaleValue` branch of `ResolveLocale`. */
+function isLocaleValue(
+  value: LocaleValue | TranslationDict,
+): value is LocaleValue {
+  return Object.values(value).every((entry) => typeof entry === "string");
 }
 
-let resolvedOptions: ResolvedLocalizationOptions | null = null;
-let initialized = false;
+/** Resolves a full translation tree down to a single locale's strings. */
+function resolveTranslationTree<T extends TranslationDict>(
+  node: T,
+  locale: string,
+): ResolveLocale<T> {
+  const result = {} as ResolveLocale<T>;
+
+  for (const key of Object.keys(node)) {
+    const value = node[key];
+    (result as Record<string, unknown>)[key] = isLocaleValue(value)
+      ? (value[locale] ?? "")
+      : resolveTranslationTree(value as TranslationDict, locale);
+  }
+
+  return result;
+}
 
 function resolveOptions(
   options: LocalizationOptions,
@@ -122,6 +140,17 @@ function buildResources(languages: readonly Language[], namespace: string) {
 
   return resources;
 }
+
+// ---------------------------------------------------------------------------
+// Module state
+// ---------------------------------------------------------------------------
+
+let resolvedOptions: ResolvedLocalizationOptions | null = null;
+let initialized = false;
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 
 /**
  * Translate a key using the shared i18next instance.
@@ -173,10 +202,6 @@ function getLocale(): string {
   return i18n.language || resolvedOptions?.defaultLocale || "";
 }
 
-function isLocale(code: string): boolean {
-  return getLanguages().some((language) => language.code === code);
-}
-
 function getLanguages(): readonly Language[] {
   return resolvedOptions?.languages ?? [];
 }
@@ -184,6 +209,10 @@ function getLanguages(): readonly Language[] {
 function getLanguage(code?: string): Language | undefined {
   const localeCode = code ?? getLocale();
   return getLanguages().find((language) => language.code === localeCode);
+}
+
+function isLocale(code: string): boolean {
+  return getLanguages().some((language) => language.code === code);
 }
 
 function getDirection(code?: string): LocaleDirection {
@@ -194,40 +223,19 @@ function isRtl(code?: string): boolean {
   return getDirection(code) === "rtl";
 }
 
-/**
- * ✅ Exported unified object API
- */
 export const localization = {
   init,
   changeLocale,
-  getLocale,
+  /** Alias of `changeLocale`. */
   setLocale: changeLocale,
+  getLocale,
   isLocale,
   getLanguages,
   getLanguage,
   getDirection,
   isRtl,
+  /** Alias of `trans`. */
   t: trans,
   trans,
-
-  /**
-   * Resolves a full translation tree down to a single locale's strings.
-   */
-  resolveTranslations<T extends TranslationDict>(
-    node: T,
-    locale: string,
-  ): ResolveLocale<T> {
-    const result = {} as ResolveLocale<T>;
-
-    for (const key of Object.keys(node)) {
-      const value = node[key];
-      const resolved = isLocaleValue(value)
-        ? (value[locale] ?? "")
-        : localization.resolveTranslations(value as TranslationDict, locale);
-
-      (result as Record<string, unknown>)[key] = resolved;
-    }
-
-    return result;
-  },
+  resolveTranslations: resolveTranslationTree,
 };

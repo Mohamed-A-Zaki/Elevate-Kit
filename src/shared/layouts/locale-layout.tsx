@@ -1,4 +1,3 @@
-import { ENABLE_LOCALE_ROUTES } from "@/shared/configurations";
 import useLocaleCode from "@/shared/hooks/use-locale-code";
 import {
   getPreferredLocale,
@@ -7,6 +6,7 @@ import {
   stripLocaleFromPath,
 } from "@/shared/routing";
 import { Navigate, Outlet, useLocation, useParams } from "react-router";
+import { ENABLE_LOCALE_ROUTES } from "../config";
 
 function InvalidLocaleRedirect() {
   const location = useLocation();

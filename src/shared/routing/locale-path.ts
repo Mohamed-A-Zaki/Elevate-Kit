@@ -1,11 +1,11 @@
-import { cache } from "@/packages/cache";
+import { cache } from "@/packages/smart-cache";
+import type { LocaleCode } from "@/shared/types/global";
 import {
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
   ENABLE_LOCALE_ROUTES,
   LOCALE_CODES,
-} from "@/shared/configurations";
-import type { LocaleCode } from "@/shared/types/global";
+} from "../config";
 import { URLS } from "./urls";
 
 export function isValidLocale(

@@ -1,4 +1,4 @@
-import { localization } from "@/packages/smart-localization";
+import { smart_localization } from "@/packages/smart-localization";
 import { localeAtom } from "@/shared/atoms/locale-atom";
 import { useCurrentLocale } from "@/shared/hooks/use-current-locale";
 import { useDirection } from "@mantine/core";
@@ -22,13 +22,13 @@ export default function useLocaleCode() {
       return;
     }
 
-    if (localization.getLocale() !== localeCode) {
-      void localization.changeLocale(localeCode);
+    if (smart_localization.getLocale() !== localeCode) {
+      void smart_localization.changeLocale(localeCode);
     }
 
     document.documentElement.lang = localeCode;
 
-    const shouldBeDir = localization.getDirection(localeCode);
+    const shouldBeDir = smart_localization.getDirection(localeCode);
 
     if (shouldBeDir !== dir) {
       toggleDirection();

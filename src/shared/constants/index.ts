@@ -1,4 +1,5 @@
 import type { MantineColorScheme } from "@mantine/core";
+
 export const BASEURL = "https://geoservices1.syadtech.com/GISAPIDEVV2";
 
 export const CACHE_KEYS = {

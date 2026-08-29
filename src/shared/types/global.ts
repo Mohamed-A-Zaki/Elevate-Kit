@@ -1,4 +1,4 @@
-import type { LOCALES, THEMES } from "../config";
+import type { LOCALES, THEMES } from "../constants";
 
 export type Translation = {
   [key: string]: string | Translation;

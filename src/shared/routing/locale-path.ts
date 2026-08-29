@@ -1,11 +1,11 @@
-import { cache } from "@/packages/smart-cache";
+import { smart_cache } from "@/packages/smart-cache";
 import type { LocaleCode } from "@/shared/types/global";
 import {
   CACHE_KEYS,
   DEFAULT_LOCALE_CODE,
   ENABLE_LOCALE_ROUTES,
   LOCALE_CODES,
-} from "../config";
+} from "../constants";
 import { URLS } from "./urls";
 
 export function isValidLocale(
@@ -69,7 +69,9 @@ export function switchLocalePath(
 }
 
 export function getPreferredLocale(): LocaleCode {
-  return cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE;
+  return (
+    smart_cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE
+  );
 }
 
 export function defaultLocalePath(path: string = URLS.home): string {

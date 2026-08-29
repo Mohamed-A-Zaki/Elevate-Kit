@@ -223,7 +223,7 @@ function isRtl(code?: string): boolean {
   return getDirection(code) === "rtl";
 }
 
-export const localization = {
+export const smart_localization = {
   init,
   changeLocale,
   /** Alias of `changeLocale`. */

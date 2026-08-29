@@ -3,7 +3,7 @@ import type {
   RegisterFormData,
   User,
 } from "@/modules/auth/types/auth";
-import { cache } from "@/packages/smart-cache";
+import { smart_cache } from "@/packages/smart-cache";
 import { atom } from "@mongez/react-atom";
 import loginService from "../services/login.service";
 import logoutService from "../services/logout.service";
@@ -43,14 +43,14 @@ export const authAtom = atom<AuthAtom, AuthAtomActions>({
   key: "authAtom",
 
   default: {
-    user: cache.get("user"),
-    token: cache.get("token"),
+    user: smart_cache.get("user"),
+    token: smart_cache.get("token"),
     loading: false,
   },
 
   beforeUpdate(newValue) {
-    cache.set("user", newValue.user);
-    cache.set("token", newValue.token);
+    smart_cache.set("user", newValue.user);
+    smart_cache.set("token", newValue.token);
     return newValue;
   },
 

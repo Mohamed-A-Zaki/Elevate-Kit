@@ -202,7 +202,7 @@ function removeKeys(keys: string[], options?: StringifyOptions): void {
 // Public API
 // ---------------------------------------------------------------------------
 
-export const queryString = {
+export const smart_query_string = {
   parse,
   stringify,
   parseUrl,

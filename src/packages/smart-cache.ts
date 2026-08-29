@@ -111,7 +111,7 @@ function has(key: string): boolean {
   return get(key) !== null;
 }
 
-export const cache = {
+export const smart_cache = {
   /** Sets the key prefix applied globally to every cache read/write. */
   configure,
   set,

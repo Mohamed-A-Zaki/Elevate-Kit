@@ -1,14 +1,15 @@
 import { authAtom } from "@/modules/auth/atoms/auth-atom";
-import { cache } from "@/packages/smart-cache";
+import { smart_cache } from "@/packages/smart-cache";
 import axios, { type AxiosResponse } from "axios";
-import { BASEURL, CACHE_KEYS, DEFAULT_LOCALE_CODE } from "../config";
+import { BASEURL, CACHE_KEYS, DEFAULT_LOCALE_CODE } from "../constants";
 
 export const endpoint = axios.create({
   baseURL: BASEURL,
   // withCredentials: true,
   headers: {
-    "Accept-Language": cache.get(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE,
-    Authorization: `Bearer ${cache.get("token")}`,
+    "Accept-Language":
+      smart_cache.get(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE,
+    Authorization: `Bearer ${smart_cache.get("token")}`,
   },
 });
 

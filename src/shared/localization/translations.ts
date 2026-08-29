@@ -1,5 +1,5 @@
 import {
-  localization,
+  smart_localization,
   type ResolveLocale,
   type TranslationDict,
 } from "@/packages/smart-localization";
@@ -24,5 +24,5 @@ export type ResolvedTranslations = ResolveLocale<Translations>;
 export function getTranslationsForLocale(
   locale: LocaleCode,
 ): ResolvedTranslations {
-  return localization.resolveTranslations(translations, locale);
+  return smart_localization.resolveTranslations(translations, locale);
 }

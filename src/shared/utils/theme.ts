@@ -1,6 +1,6 @@
 import i18n from "@/shared/localization/i18n";
 import { createTheme, localStorageColorSchemeManager } from "@mantine/core";
-import { CACHE_KEYS, FONTS } from "../config";
+import { CACHE_KEYS, FONTS } from "../constants";
 
 export const theme = createTheme({
   colors: {

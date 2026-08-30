@@ -5,7 +5,7 @@ import { trans } from "../../packages/smart-localization";
 /***
  * cache configurations
  */
-smart_cache.configure({ prefix: "react-mantine-kit-" });
+smart_cache.configure({ prefix: "app-" });
 
 /***
  * helmet configurations

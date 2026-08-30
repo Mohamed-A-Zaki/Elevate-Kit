@@ -16,4 +16,7 @@ export const helmetTranslations = {
     en: "About Page",
     fr: "À propos",
   },
+  notFound: {
+    ar: "not found",
+  },
 } satisfies TranslationDict;

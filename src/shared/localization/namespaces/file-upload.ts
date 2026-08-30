@@ -1,4 +1,5 @@
 import type { TranslationDict } from "@/packages/smart-localization";
+import type { LocaleCode } from "@/shared/types/global";
 
 export const fileUploadTranslations = {
   title: {
@@ -71,4 +72,4 @@ export const fileUploadTranslations = {
     en: "The uploaded file isn't valid, please check the error shown below and fix it",
     fr: "Le fichier téléchargé n'est pas valide, veuillez vérifier l'erreur affichée ci-dessous et la corriger",
   },
-} satisfies TranslationDict;
+} satisfies TranslationDict<LocaleCode>;

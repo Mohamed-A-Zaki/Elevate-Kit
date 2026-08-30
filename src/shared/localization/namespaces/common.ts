@@ -1,4 +1,5 @@
 import type { TranslationDict } from "@/packages/smart-localization";
+import type { LocaleCode } from "@/shared/types/global";
 
 export const commonTranslations = {
   greeting: {
@@ -61,4 +62,4 @@ export const commonTranslations = {
     en: "Blog Details",
     fr: "Détails de l'article",
   },
-} satisfies TranslationDict;
+} satisfies TranslationDict<LocaleCode>;

@@ -1,4 +1,5 @@
 import type { TranslationDict } from "@/packages/smart-localization";
+import type { LocaleCode } from "@/shared/types/global";
 
 export const helmetTranslations = {
   app_name: {
@@ -17,6 +18,8 @@ export const helmetTranslations = {
     fr: "À propos",
   },
   notFound: {
-    ar: "not found",
+    ar: "غير موجود",
+    en: "Not Found",
+    fr: "Page introuvable",
   },
-} satisfies TranslationDict;
+} satisfies TranslationDict<LocaleCode>;

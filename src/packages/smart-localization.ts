@@ -12,15 +12,18 @@ export type LocaleDirection = "ltr" | "rtl";
 /**
  * A single translatable string, keyed by locale.
  */
-export type LocaleValue = Record<string, string>;
+export type LocaleValue<TLocale extends string = string> = Record<
+  TLocale,
+  string
+>;
 
 /**
  * A namespace of translations. Each key is either a leaf (`LocaleValue`)
  * or another nested namespace (recursive), so namespaces can be nested
  * arbitrarily deep.
  */
-export interface TranslationDict {
-  [key: string]: LocaleValue | TranslationDict;
+export interface TranslationDict<TLocale extends string = string> {
+  [key: string]: LocaleValue<TLocale> | TranslationDict<TLocale>;
 }
 
 /**
@@ -28,19 +31,19 @@ export interface TranslationDict {
  * resolving every leaf down to a single locale's string — with the
  * exact key names preserved.
  */
-export type ResolveLocale<T extends TranslationDict> = {
-  [K in keyof T]: T[K] extends LocaleValue
+export type ResolveLocale<T extends TranslationDict<any>> = {
+  [K in keyof T]: T[K] extends LocaleValue<any>
     ? string
-    : T[K] extends TranslationDict
+    : T[K] extends TranslationDict<any>
       ? ResolveLocale<T[K]>
       : never;
 };
 
-export interface Language {
-  code: string;
+export interface Language<TLocale extends string = string> {
+  code: TLocale;
   label?: string;
   dir?: LocaleDirection;
-  translations: TranslationDict;
+  translations: TranslationDict<TLocale>;
 }
 
 /** Pluggable persistence layer used to remember the selected locale. */
@@ -96,24 +99,24 @@ const defaultStorage: LocalizationStorage = {
 };
 
 /** Runtime counterpart of the `LocaleValue` branch of `ResolveLocale`. */
-function isLocaleValue(
-  value: LocaleValue | TranslationDict,
-): value is LocaleValue {
+function isLocaleValue<TLocale extends string>(
+  value: LocaleValue<TLocale> | TranslationDict<TLocale>,
+): value is LocaleValue<TLocale> {
   return Object.values(value).every((entry) => typeof entry === "string");
 }
 
 /** Resolves a full translation tree down to a single locale's strings. */
-function resolveTranslationTree<T extends TranslationDict>(
-  node: T,
-  locale: string,
-): ResolveLocale<T> {
+function resolveTranslationTree<
+  TLocale extends string,
+  T extends TranslationDict<TLocale>,
+>(node: T, locale: TLocale): ResolveLocale<T> {
   const result = {} as ResolveLocale<T>;
 
   for (const key of Object.keys(node)) {
     const value = node[key];
     (result as Record<string, unknown>)[key] = isLocaleValue(value)
       ? (value[locale] ?? "")
-      : resolveTranslationTree(value as TranslationDict, locale);
+      : resolveTranslationTree(value as TranslationDict<TLocale>, locale);
   }
 
   return result;

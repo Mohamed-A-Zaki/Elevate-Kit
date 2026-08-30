@@ -14,7 +14,6 @@ export default function CreatePositionModal() {
     initialValues: {
       name: "",
     },
-
     validate: {
       name: isNotEmpty("هذا الحقل مطلوب"),
     },

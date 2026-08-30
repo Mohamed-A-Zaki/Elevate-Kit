@@ -29,26 +29,34 @@ export default function PositionsPage() {
     page: activePage - 1,
   });
 
+  function onEditIconClick(id: number) {
+    open_edit_position_modal_atom.open();
+    selected_position_id_atom.update({
+      id: id,
+    });
+  }
+
+  function onDeleteIconClick(id: number) {
+    open_delete_position_modal_atom.open();
+    selected_position_id_atom.update({
+      id: id,
+    });
+  }
+
   const rows = data?.results.map((element) => (
     <Table.Tr key={element.id}>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td className="flex items-center gap-2">
         <ActionIcon
           onClick={() => {
-            open_edit_position_modal_atom.open();
-            selected_position_id_atom.update({
-              id: +element.id,
-            });
+            onEditIconClick(+element.id);
           }}
         >
           <FiEdit3 size={12} />
         </ActionIcon>
         <ActionIcon
           onClick={() => {
-            open_delete_position_modal_atom.open();
-            selected_position_id_atom.update({
-              id: +element.id,
-            });
+            onDeleteIconClick(+element.id);
           }}
         >
           <FaTrash size={12} />

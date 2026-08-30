@@ -35,25 +35,27 @@ export default function EditPositionModal() {
   }, [data]);
 
   function handleSubmit(values: typeof form.values) {
-    if (id) {
-      mutate(
-        { id, data: values },
-        {
-          onSuccess() {
-            closeModal();
-            notifications.show({
-              message: "تم التعديل بنجاح",
-            });
-          },
-          onError(error) {
-            notifications.show({
-              message: error.message,
-              color: "red",
-            });
-          },
-        },
-      );
+    if (!id) {
+      return;
     }
+
+    mutate(
+      { id, data: values },
+      {
+        onSuccess() {
+          closeModal();
+          notifications.show({
+            message: "تم التعديل بنجاح",
+          });
+        },
+        onError(error) {
+          notifications.show({
+            message: error.message,
+            color: "red",
+          });
+        },
+      },
+    );
   }
 
   return (

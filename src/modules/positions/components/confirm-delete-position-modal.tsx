@@ -16,22 +16,24 @@ export default function ConfirmDeletePositionModal() {
   }
 
   function handleDelete() {
-    if (id) {
-      mutate(id, {
-        onSuccess() {
-          closeModal();
-          notifications.show({
-            message: "تم الحذف بنجاح",
-          });
-        },
-        onError(error) {
-          notifications.show({
-            message: error.message,
-            color: "red",
-          });
-        },
-      });
+    if (!id) {
+      return;
     }
+
+    mutate(id, {
+      onSuccess() {
+        closeModal();
+        notifications.show({
+          message: "تم الحذف بنجاح",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          message: error.message,
+          color: "red",
+        });
+      },
+    });
   }
 
   return (

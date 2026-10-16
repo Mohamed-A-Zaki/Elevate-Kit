@@ -8,12 +8,12 @@ import { Navigate, Route, Routes, useParams } from "react-router";
 
 import LocaleLayout from "@/shared/layouts/locale-layout";
 import { coreRoutes } from "@/shared/routes/core-routes";
-import { ENABLE_LOCALE_ROUTES } from "../constants";
+import { routingConfig } from "../configurations";
 
 function LocaleNotFoundRedirect() {
   const { locale } = useParams();
 
-  if (!ENABLE_LOCALE_ROUTES) {
+  if (!routingConfig.enableLocaleRoutes) {
     return <Navigate to={URLS.notFound} replace />;
   }
 
@@ -57,5 +57,9 @@ function FlatRoutes() {
 }
 
 export default function AppRoutes() {
-  return ENABLE_LOCALE_ROUTES ? <LocalePrefixedRoutes /> : <FlatRoutes />;
+  return routingConfig.enableLocaleRoutes ? (
+    <LocalePrefixedRoutes />
+  ) : (
+    <FlatRoutes />
+  );
 }

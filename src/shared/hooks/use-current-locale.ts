@@ -2,7 +2,7 @@ import { localeAtom } from "@/shared/atoms/locale-atom";
 import { resolveLocaleCode } from "@/shared/routing";
 import type { LocaleCode } from "@/shared/types/global";
 import { useParams } from "react-router";
-import { DEFAULT_LOCALE_CODE } from "../constants";
+import { localeConfig } from "../configurations";
 
 export function useCurrentLocale(): LocaleCode | null {
   const { locale } = useParams();
@@ -12,7 +12,7 @@ export function useCurrentLocale(): LocaleCode | null {
 }
 
 export function useResolvedLocale(
-  fallback: LocaleCode = DEFAULT_LOCALE_CODE,
+  fallback: LocaleCode = localeConfig.defaultLocaleCode,
 ): LocaleCode {
   return useCurrentLocale() ?? fallback;
 }

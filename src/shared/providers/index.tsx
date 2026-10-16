@@ -4,14 +4,14 @@ import { DirectionProvider, MantineProvider } from "@mantine/core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type PropsWithChildren } from "react";
-import { DEFAULT_THEME } from "../constants";
+import { themeConfig } from "../configurations";
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
     <DirectionProvider>
       <MantineProvider
         theme={theme}
-        defaultColorScheme={DEFAULT_THEME}
+        defaultColorScheme={themeConfig.defaultTheme}
         colorSchemeManager={colorSchemeManager}
       >
         <QueryClientProvider client={queryClient}>

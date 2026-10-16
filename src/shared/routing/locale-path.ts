@@ -1,11 +1,7 @@
 import { smart_cache } from "@/packages/smart-cache";
 import type { LocaleCode } from "@/shared/types/global";
-import {
-  CACHE_KEYS,
-  DEFAULT_LOCALE_CODE,
-  ENABLE_LOCALE_ROUTES,
-  LOCALE_CODES,
-} from "../constants";
+import { localeConfig, routingConfig } from "../configurations";
+import { CACHE_KEYS, LOCALE_CODES } from "../constants";
 import { URLS } from "./urls";
 
 export function isValidLocale(
@@ -25,7 +21,7 @@ export function localizedPath(
   locale: LocaleCode,
   path: string = URLS.home,
 ): string {
-  if (!ENABLE_LOCALE_ROUTES) {
+  if (!routingConfig.enableLocaleRoutes) {
     return path;
   }
 
@@ -34,7 +30,7 @@ export function localizedPath(
 }
 
 export function getLocaleFromPath(pathname: string): LocaleCode | null {
-  if (!ENABLE_LOCALE_ROUTES) {
+  if (!routingConfig.enableLocaleRoutes) {
     return null;
   }
 
@@ -43,7 +39,7 @@ export function getLocaleFromPath(pathname: string): LocaleCode | null {
 }
 
 export function stripLocaleFromPath(pathname: string): string {
-  if (!ENABLE_LOCALE_ROUTES) {
+  if (!routingConfig.enableLocaleRoutes) {
     return pathname || URLS.home;
   }
 
@@ -61,7 +57,7 @@ export function switchLocalePath(
   pathname: string,
   newLocale: LocaleCode,
 ): string {
-  if (!ENABLE_LOCALE_ROUTES) {
+  if (!routingConfig.enableLocaleRoutes) {
     return pathname || URLS.home;
   }
 
@@ -70,12 +66,13 @@ export function switchLocalePath(
 
 export function getPreferredLocale(): LocaleCode {
   return (
-    smart_cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) || DEFAULT_LOCALE_CODE
+    smart_cache.get<LocaleCode>(CACHE_KEYS.LOCALE_CODE) ||
+    localeConfig.defaultLocaleCode
   );
 }
 
 export function defaultLocalePath(path: string = URLS.home): string {
-  return localizedPath(DEFAULT_LOCALE_CODE, path);
+  return localizedPath(localeConfig.defaultLocaleCode, path);
 }
 
 export function preferredLocalePath(path: string = URLS.home): string {
@@ -86,7 +83,7 @@ export function resolveLocaleCode(
   routeLocale: string | undefined,
   atomLocale?: LocaleCode,
 ): LocaleCode | null {
-  if (ENABLE_LOCALE_ROUTES) {
+  if (routingConfig.enableLocaleRoutes) {
     return isValidLocale(routeLocale) ? routeLocale : null;
   }
 

@@ -1,11 +1,12 @@
 import { smart_cache } from "@/packages/smart-cache";
 import { smart_localization } from "@/packages/smart-localization";
-import { CACHE_KEYS, DEFAULT_LOCALE_CODE } from "../constants";
+import { localeConfig } from "../configurations";
+import { CACHE_KEYS } from "../constants";
 import { languages } from "./languages";
 
 const i18n = smart_localization.init({
   languages,
-  defaultLocale: DEFAULT_LOCALE_CODE,
+  defaultLocale: localeConfig.defaultLocaleCode,
   cacheKey: CACHE_KEYS.LOCALE_CODE,
   storage: {
     get: (key) => smart_cache.get<string>(key),

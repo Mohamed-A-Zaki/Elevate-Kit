@@ -6,7 +6,7 @@ import type { LocaleCode } from "@/shared/types/global";
 import { ActionIcon, Menu } from "@mantine/core";
 import { FaGlobe } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router";
-import { ENABLE_LOCALE_ROUTES } from "../constants";
+import { routingConfig } from "../configurations";
 
 export default function LocaleSwitcher() {
   const localeCode = useResolvedLocale();
@@ -14,7 +14,7 @@ export default function LocaleSwitcher() {
   const { pathname } = useLocation();
 
   const handleChange = (code: LocaleCode) => {
-    if (ENABLE_LOCALE_ROUTES) {
+    if (routingConfig.enableLocaleRoutes) {
       navigate(switchLocalePath(pathname, code));
       return;
     }

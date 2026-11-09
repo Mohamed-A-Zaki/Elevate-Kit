@@ -3,6 +3,8 @@ export const BASEURL = "https://geoservices1.syadtech.com/GISAPIDEVV2";
 export const CACHE_KEYS = {
   THEME: "theme",
   LOCALE_CODE: "locale-code",
+  USER: "user",
+  TOKEN: "token",
 } as const;
 
 export const FONTS = {

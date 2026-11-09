@@ -10,13 +10,13 @@ export const endpoint = axios.create({
   headers: {
     "Accept-Language":
       smart_cache.get(CACHE_KEYS.LOCALE_CODE) || localeConfig.defaultLocaleCode,
-    Authorization: `Bearer ${smart_cache.get("token")}`,
+    Authorization: `Bearer ${smart_cache.get(CACHE_KEYS.TOKEN)}`,
   },
 });
 
 // endpoint.interceptors.request.use(
 //   (config) => {
-//     const token = cache.get("token");
+//     const token = cache.get(CACHE_KEYS.TOKEN);
 
 //     if (token) {
 //       config.headers.Authorization = `Bearer ${token}`;
@@ -37,7 +37,7 @@ endpoint.interceptors.response.use(
     const response: AxiosResponse | undefined = error.response;
 
     if (response?.data?.status_code === 401) {
-      authAtom.change("user", null);
+      authAtom.change(CACHE_KEYS.USER, null);
     }
 
     return Promise.reject(error);

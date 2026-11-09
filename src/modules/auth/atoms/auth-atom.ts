@@ -4,6 +4,7 @@ import type {
   User,
 } from "@/modules/auth/types/auth";
 import { smart_cache } from "@/packages/smart-cache";
+import { CACHE_KEYS } from "@/shared/constants";
 import { atom } from "@mongez/react-atom";
 import loginService from "../services/login.service";
 import logoutService from "../services/logout.service";
@@ -43,14 +44,14 @@ export const authAtom = atom<AuthAtom, AuthAtomActions>({
   key: "authAtom",
 
   default: {
-    user: smart_cache.get("user"),
-    token: smart_cache.get("token"),
+    user: smart_cache.get(CACHE_KEYS.USER),
+    token: smart_cache.get(CACHE_KEYS.TOKEN),
     loading: false,
   },
 
   beforeUpdate(newValue) {
-    smart_cache.set("user", newValue.user);
-    smart_cache.set("token", newValue.token);
+    smart_cache.set(CACHE_KEYS.USER, newValue.user);
+    smart_cache.set(CACHE_KEYS.TOKEN, newValue.token);
     return newValue;
   },
 

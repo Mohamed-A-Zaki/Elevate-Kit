@@ -1,4 +1,5 @@
 import { endpoint } from "@/shared/api/endpoint";
+import { CACHE_KEYS } from "@/shared/constants";
 import { handleError } from "@/shared/utils/handle-error";
 import { notifications } from "@mantine/notifications";
 import { authAtom } from "../atoms/auth-atom";
@@ -10,8 +11,8 @@ export default async function logoutService(onSuccess?: () => void) {
 
     const { data } = await endpoint.post<LogoutResponse>("/logout");
 
-    authAtom.change("user", null);
-    authAtom.change("token", "");
+    authAtom.change(CACHE_KEYS.USER, null);
+    authAtom.change(CACHE_KEYS.TOKEN, "");
 
     onSuccess?.();
 

@@ -1,4 +1,5 @@
 import { endpoint } from "@/shared/api/endpoint";
+import { CACHE_KEYS } from "@/shared/constants";
 import { handleError } from "@/shared/utils/handle-error";
 import { notifications } from "@mantine/notifications";
 import { authAtom } from "../atoms/auth-atom";
@@ -16,8 +17,8 @@ export default async function registerService(
       formData,
     );
 
-    authAtom.change("user", data.data.user);
-    authAtom.change("token", data.data.token);
+    authAtom.change(CACHE_KEYS.USER, data.data.user);
+    authAtom.change(CACHE_KEYS.TOKEN, data.data.token);
 
     onSuccess?.();
 

@@ -11,9 +11,9 @@
  */
 
 import { smart_cache } from "@/packages/smart-cache";
+import { trans } from "@/packages/smart-localization.ts";
 import type { MantineColorScheme } from "@mantine/core";
 import { setHelmetConfigurations } from "@mongez/react-helmet";
-import { trans } from "../../packages/smart-localization";
 import { LOCALES, THEMES } from "../constants";
 
 /**
